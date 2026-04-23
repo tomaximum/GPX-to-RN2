@@ -187,7 +187,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 };
 
                 // Visual Recovery: Inject Base64 images as custom icons
+                let hasTulipImage = false;
                 if (tulipImage && tulipImage.includes("data:image")) {
+                    hasTulipImage = true;
                     rn2Wpt.tulip.elements.push({
                         "type": "Icon",
                         "name": "Original Drawing",
@@ -199,59 +201,66 @@ document.addEventListener('DOMContentLoaded', () => {
                     });
                 }
 
+                let hasNoteImage = false;
                 if (noteImage && noteImage.includes("data:image")) {
+                    hasNoteImage = true;
                     rn2Wpt.notes.elements.push({
                         "type": "Icon",
                         "name": "Original Note",
                         "id": "img_note_" + generateUUID(),
                         "src": noteImage.trim(),
-                        "x": 100, "y": 100, "w": 180, "h": 180, "z": 10,
+                        "x": 100, "y": 100, "w": 195, "h": 130, "z": 10,
                         "rerender": false,
                         "eId": generateUUID()
                     });
                 }
 
-                // Extract text notes
-                // Filter out names that are just numbers (like "001") if desc/cmt exist
-                let noteParts = [];
-                if (name && (isNaN(name) || name.length > 3)) noteParts.push(name);
-                if (desc) noteParts.push(desc);
-                if (cmt) noteParts.push(cmt);
-                
-                let combinedNote = noteParts.filter(t => t && t.length > 0).join('\n');
-                if (combinedNote) {
-                    rn2Wpt.notes.texts.push({
-                        "text": combinedNote,
-                        "x": 2.5,
-                        "y": 2.5,
-                        "w": 195,
-                        "h": 100,
-                        "fontSize": 14,
-                        "lineHeight": 1.2,
-                        "eId": generateUUID(),
-                        "z": 1
-                    });
+                // Extract text notes ONLY if no note image is present to avoid duplication
+                if (!hasNoteImage) {
+                    // Filter out names that are just numbers (like "001") if desc/cmt exist
+                    let noteParts = [];
+                    if (name && (isNaN(name) || name.length > 3)) noteParts.push(name);
+                    if (desc) noteParts.push(desc);
+                    if (cmt) noteParts.push(cmt);
+                    
+                    let combinedNote = noteParts.filter(t => t && t.length > 0).join('\n');
+                    if (combinedNote) {
+                        rn2Wpt.notes.texts.push({
+                            "text": combinedNote,
+                            "x": 2.5,
+                            "y": 2.5,
+                            "w": 195,
+                            "h": 100,
+                            "fontSize": 14,
+                            "lineHeight": 1.2,
+                            "eId": generateUUID(),
+                            "z": 1
+                        });
+                    }
                 }
 
-                if (reset !== undefined) {
-                    rn2Wpt.notes.elements.push(createIconElement("Reset", ICON_MAPPING['reset'], `<openrally:reset>${reset}</openrally:reset>`, 30));
-                }
-                
-                let iconX = 80;
-                if (speed) {
-                    rn2Wpt.notes.elements.push(createIconElement(`Speed Limit ${speed}`, ICON_MAPPING['speed_40'], `<speed>${speed}</speed>`, iconX));
-                    iconX += 55;
-                }
-                if (fuel !== undefined || wpt.getElementsByTagName("openrally:fuel").length > 0) {
-                    rn2Wpt.notes.elements.push(createIconElement("Fuel", ICON_MAPPING['fuel'], `<fuel/>`, iconX));
-                    iconX += 55;
-                }
-                if (danger) {
-                    let dId = ICON_MAPPING['danger_' + danger] || ICON_MAPPING['danger_2'];
-                    rn2Wpt.notes.elements.push(createIconElement(`Danger Level ${danger}`, dId, `<danger>${danger}</danger>`, iconX));
+                // Extract note icons ONLY if no note image is present
+                if (!hasNoteImage) {
+                    if (reset !== undefined) {
+                        rn2Wpt.notes.elements.push(createIconElement("Reset", ICON_MAPPING['reset'], `<openrally:reset>${reset}</openrally:reset>`, 30));
+                    }
+                    
+                    let iconX = 80;
+                    if (speed) {
+                        rn2Wpt.notes.elements.push(createIconElement(`Speed Limit ${speed}`, ICON_MAPPING['speed_40'], `<speed>${speed}</speed>`, iconX));
+                        iconX += 55;
+                    }
+                    if (fuel !== undefined || wpt.getElementsByTagName("openrally:fuel").length > 0) {
+                        rn2Wpt.notes.elements.push(createIconElement("Fuel", ICON_MAPPING['fuel'], `<fuel/>`, iconX));
+                        iconX += 55;
+                    }
+                    if (danger) {
+                        let dId = ICON_MAPPING['danger_' + danger] || ICON_MAPPING['danger_2'];
+                        rn2Wpt.notes.elements.push(createIconElement(`Danger Level ${danger}`, dId, `<danger>${danger}</danger>`, iconX));
+                    }
                 }
 
-                // Special Waypoint Icons
+                // Special Waypoint Icons (DZ, FZ, DSS, ASS, WPS) - Always add as they are essential for map/odometer
                 if (dss) rn2Wpt.waypointIcon = createWaypointIcon("Start Special", "dss", ICON_MAPPING['dss'], dss);
                 else if (ass) rn2Wpt.waypointIcon = createWaypointIcon("Finish Special", "ass", ICON_MAPPING['ass'], ass);
                 else if (fz) rn2Wpt.waypointIcon = createWaypointIcon("Finish Speed Limit", "fz", ICON_MAPPING['fz'], fz);
