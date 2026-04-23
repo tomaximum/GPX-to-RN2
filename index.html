@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GPX to RN2 Converter | Premium Rally Tools</title>
+    <meta name="description" content="Convertissez vos fichiers GPX OpenRally en fichiers .rn2 pour Rally Navigator avec précision.">
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="background-glow"></div>
+    
+    <main class="container">
+        <header>
+            <div class="logo">
+                <span class="accent">GPX</span><span class="separator">to</span><span class="primary">RN2</span>
+            </div>
+            <h1>Convertisseur Roadbook</h1>
+            <p class="subtitle">Transformez vos traces OpenRally en fichiers modifiables pour Rally Navigator.</p>
+        </header>
+
+        <section class="converter-box glass">
+            <div id="drop-zone" class="drop-zone">
+                <div class="drop-zone-content">
+                    <div class="icon-upload">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="17 8 12 3 7 8"></polyline>
+                            <line x1="12" y1="3" x2="12" y2="15"></line>
+                        </svg>
+                    </div>
+                    <h3>Glissez votre fichier GPX ici</h3>
+                    <p>ou cliquez pour parcourir vos fichiers</p>
+                    <input type="file" id="file-input" accept=".gpx" hidden>
+                </div>
+            </div>
+
+            <div id="file-info" class="file-info hidden">
+                <div class="file-details">
+                    <span class="file-name" id="selected-file-name">nom_du_fichier.gpx</span>
+                    <span class="file-status">Prêt pour la conversion</span>
+                </div>
+                <button id="convert-btn" class="btn-primary">Convertir en .rn2</button>
+            </div>
+
+            <div id="status-message" class="status-message"></div>
+        </section>
+
+        <section class="features">
+            <div class="feature-card glass">
+                <div class="feature-icon">📍</div>
+                <h4>Trace Intégrale</h4>
+                <p>Récupère chaque point GPS pour un tracé parfait sur la carte.</p>
+            </div>
+            <div class="feature-card glass highlight">
+                <div class="feature-icon">✨</div>
+                <h4>Visual Recovery</h4>
+                <p>Vos tulipes originales sont injectées comme calques haute fidélité.</p>
+            </div>
+            <div class="feature-card glass">
+                <div class="feature-icon">🛠️</div>
+                <h4>Édition Facile</h4>
+                <p>Importez directement dans Rally Navigator pour finaliser votre roadbook.</p>
+            </div>
+        </section>
+
+        <footer>
+            <p>&copy; 2026 GPX-to-RN2 Converter - <a href="https://github.com/tomaximum/GPX-to-RN2" target="_blank">GitHub</a></p>
+        </footer>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>
