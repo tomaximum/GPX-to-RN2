@@ -156,23 +156,35 @@ document.addEventListener('DOMContentLoaded', () => {
             if (pt.isWaypoint) {
                 const wpt = pt.xmlNode;
                 const extensions = wpt.getElementsByTagName("extensions")[0];
-                const reset = extensions?.getElementsByTagName("openrally:reset")[0]?.textContent;
-                const speed = extensions?.getElementsByTagName("openrally:speed")[0]?.textContent;
-                const wpv = extensions?.getElementsByTagName("openrally:wpv")[0];
-                const dz = extensions?.getElementsByTagName("openrally:dz")[0];
-                const fz = extensions?.getElementsByTagName("openrally:fz")[0];
-                const dss = extensions?.getElementsByTagName("openrally:dss")[0];
-                const ass = extensions?.getElementsByTagName("openrally:ass")[0];
-                const fuel = extensions?.getElementsByTagName("openrally:fuel")[0];
-                const danger = extensions?.getElementsByTagName("openrally:danger")[0]?.textContent;
+                // Robust tag extraction
+                const getExtTag = (ext, name) => {
+                    if (!ext) return null;
+                    const tags = ext.getElementsByTagNameNS ? ext.getElementsByTagNameNS("*", name) : [];
+                    if (tags.length > 0) return tags[0];
+                    return Array.from(ext.childNodes).find(n => n.nodeName.endsWith(":" + name) || n.nodeName === name);
+                };
+
+                const resetNode = getExtTag(extensions, "reset");
+                const speedNode = getExtTag(extensions, "speed");
+                const wpvNode = getExtTag(extensions, "wpv");
+                const dzNode = getExtTag(extensions, "dz");
+                const fzNode = getExtTag(extensions, "fz");
+                const dssNode = getExtTag(extensions, "dss");
+                const assNode = getExtTag(extensions, "ass");
+                const fuelNode = getExtTag(extensions, "fuel");
+                const dangerNode = getExtTag(extensions, "danger");
+                const tulipNode = getExtTag(extensions, "tulip");
+                const noteNode = getExtTag(extensions, "notes");
+
+                const reset = resetNode?.textContent;
+                const speed = speedNode?.textContent;
+                const danger = dangerNode?.textContent;
+                const tulipImage = tulipNode?.textContent;
+                const noteImage = noteNode?.textContent;
 
                 const name = wpt.getElementsByTagName("name")[0]?.textContent;
                 const desc = wpt.getElementsByTagName("desc")[0]?.textContent;
                 const cmt = wpt.getElementsByTagName("cmt")[0]?.textContent;
-
-                // Extract Base64 Images
-                const tulipImage = extensions?.getElementsByTagName("openrally:tulip")[0]?.textContent;
-                const noteImage = extensions?.getElementsByTagName("openrally:notes")[0]?.textContent;
 
                 let rn2Wpt = {
                     "t_uuid": "wpt_uuid_" + generateUUID(),
@@ -195,7 +207,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         "name": "Original Drawing",
                         "id": "img_" + generateUUID(),
                         "src": tulipImage.trim(),
-                        "x": 100, "y": 100, "w": 180, "h": 180, "z": 10,
+                        "x": 100, "y": 100, "w": 190, "h": 190, "z": 10,
                         "rerender": false,
                         "eId": generateUUID()
                     });
@@ -209,7 +221,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         "name": "Original Note",
                         "id": "img_note_" + generateUUID(),
                         "src": noteImage.trim(),
-                        "x": 100, "y": 100, "w": 195, "h": 130, "z": 10,
+                        "x": 100, "y": 100, "w": 198, "h": 180, "z": 10,
                         "rerender": false,
                         "eId": generateUUID()
                     });
@@ -217,7 +229,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 // Extract text notes ONLY if no note image is present to avoid duplication
                 if (!hasNoteImage) {
-                    // Filter out names that are just numbers (like "001") if desc/cmt exist
                     let noteParts = [];
                     if (name && (isNaN(name) || name.length > 3)) noteParts.push(name);
                     if (desc) noteParts.push(desc);
@@ -227,30 +238,21 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (combinedNote) {
                         rn2Wpt.notes.texts.push({
                             "text": combinedNote,
-                            "x": 2.5,
-                            "y": 2.5,
-                            "w": 195,
-                            "h": 100,
-                            "fontSize": 14,
-                            "lineHeight": 1.2,
-                            "eId": generateUUID(),
-                            "z": 1
+                            "x": 2.5, "y": 2.5, "w": 195, "h": 100, "fontSize": 14, "lineHeight": 1.2, "eId": generateUUID(), "z": 1
                         });
                     }
                 }
 
                 // Extract note icons ONLY if no note image is present
                 if (!hasNoteImage) {
-                    if (reset !== undefined) {
-                        rn2Wpt.notes.elements.push(createIconElement("Reset", ICON_MAPPING['reset'], `<openrally:reset>${reset}</openrally:reset>`, 30));
-                    }
+                    if (reset !== undefined) rn2Wpt.notes.elements.push(createIconElement("Reset", ICON_MAPPING['reset'], `<openrally:reset>${reset}</openrally:reset>`, 30));
                     
                     let iconX = 80;
                     if (speed) {
                         rn2Wpt.notes.elements.push(createIconElement(`Speed Limit ${speed}`, ICON_MAPPING['speed_40'], `<speed>${speed}</speed>`, iconX));
                         iconX += 55;
                     }
-                    if (fuel !== undefined || wpt.getElementsByTagName("openrally:fuel").length > 0) {
+                    if (fuelNode) {
                         rn2Wpt.notes.elements.push(createIconElement("Fuel", ICON_MAPPING['fuel'], `<fuel/>`, iconX));
                         iconX += 55;
                     }
@@ -261,12 +263,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
 
                 // Special Waypoint Icons (DZ, FZ, DSS, ASS, WPS) - Always add as they are essential for map/odometer
-                if (dss) rn2Wpt.waypointIcon = createWaypointIcon("Start Special", "dss", ICON_MAPPING['dss'], dss);
-                else if (ass) rn2Wpt.waypointIcon = createWaypointIcon("Finish Special", "ass", ICON_MAPPING['ass'], ass);
-                else if (fz) rn2Wpt.waypointIcon = createWaypointIcon("Finish Speed Limit", "fz", ICON_MAPPING['fz'], fz);
-                else if (dz) rn2Wpt.waypointIcon = createWaypointIcon("Start Speed Limit", "dz", ICON_MAPPING['dz'], dz);
-                else if (wpv) rn2Wpt.waypointIcon = createWaypointIcon("Visible WP", "wpv", ICON_MAPPING['wpv'], wpv);
-                else if (extensions?.getElementsByTagName("openrally:wps")[0]) rn2Wpt.waypointIcon = createWaypointIcon("Secret WP", "wps", ICON_MAPPING['wps'], null);
+                if (dssNode) rn2Wpt.waypointIcon = createWaypointIcon("Start Special", "dss", ICON_MAPPING['dss'], dssNode);
+                else if (assNode) rn2Wpt.waypointIcon = createWaypointIcon("Finish Special", "ass", ICON_MAPPING['ass'], assNode);
+                else if (fzNode) rn2Wpt.waypointIcon = createWaypointIcon("Finish Speed Limit", "fz", ICON_MAPPING['fz'], fzNode);
+                else if (dzNode) rn2Wpt.waypointIcon = createWaypointIcon("Start Speed Limit", "dz", ICON_MAPPING['dz'], dzNode);
+                else if (wpvNode) rn2Wpt.waypointIcon = createWaypointIcon("Visible WP", "wpv", ICON_MAPPING['wpv'], wpvNode);
+                else if (getExtTag(extensions, "wps")) rn2Wpt.waypointIcon = createWaypointIcon("Secret WP", "wps", ICON_MAPPING['wps'], null);
 
                 return rn2Wpt;
             } else {
