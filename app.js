@@ -212,12 +212,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 const desc = wpt.getElementsByTagName("desc")[0]?.textContent;
                 const cmt = wpt.getElementsByTagName("cmt")[0]?.textContent;
 
+                // Calculate heading for display
+                const headingVal = Math.round(angleOut);
+
                 let rn2Wpt = {
                     "waypointid": idx,
                     "lat": pt.lat,
                     "lon": pt.lon,
                     "ele": pt.ele,
-                    "show": pt.isWaypoint,
+                    "show": true, // Force show for waypoints to get the number circle
                     "showCoordinates": false,
                     "showHeading": true,
                     "showStickMarkOnTulip": true,
@@ -227,7 +230,16 @@ document.addEventListener('DOMContentLoaded', () => {
                             { "start": roadInStart, "end": { "x": 100, "y": 60 }, "handles": [], "typeId": 10, "z": 5 },
                             { "start": { "x": 100, "y": 60 }, "end": roadOutEnd, "handles": [], "typeId": 10, "z": 5 }
                         ],
-                        "texts": [],
+                        "texts": [
+                            {
+                                "text": headingVal.toString(),
+                                "x": 150, "y": 25, "w": 40, "h": 20,
+                                "fontSize": 14, "fontWeight": "bold",
+                                "backgroundColor": "#FFEB3B", // Yellow like the original
+                                "color": "#000000",
+                                "z": 10
+                            }
+                        ],
                         "icons": [],
                         "lines": []
                     },
