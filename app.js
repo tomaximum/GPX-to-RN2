@@ -166,12 +166,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const angleIn = (getHeading(prevPt, pt) + 180) % 360;
             const angleOut = getHeading(pt, nextPt);
 
-            // Convert angle to RN2 coordinates (center 92,65 to match professional RN2 alignment)
+            // Convert angle to RN2 coordinates (center 100,112 to align with the geographic pin/anchor)
             const getCoord = (angle, d = 30) => {
                 const rad = (angle - 90) * Math.PI / 180;
                 return {
-                    x: 92 + d * Math.cos(rad),
-                    y: 65 + d * Math.sin(rad)
+                    x: 100 + d * Math.cos(rad),
+                    y: 112 + d * Math.sin(rad)
                 };
             };
 
@@ -224,8 +224,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     "tulip": {
                         "track": { "roadOut": {}, "roadIn": {}, "z": 0 },
                         "roads": [
-                            { "start": roadInStart, "end": { "x": 92, "y": 65 }, "handles": [], "typeId": 10, "z": 5 },
-                            { "start": { "x": 92, "y": 65 }, "end": roadOutEnd, "handles": [], "typeId": 10, "z": 5 }
+                            { "start": roadInStart, "end": { "x": 100, "y": 112 }, "handles": [], "typeId": 10, "z": 5 },
+                            { "start": { "x": 100, "y": 112 }, "end": roadOutEnd, "handles": [], "typeId": 10, "z": 5 }
                         ],
                         "texts": [],
                         "icons": [],
@@ -247,7 +247,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         "name": "Original Drawing",
                         "id": "img_" + generateUUID(),
                         "src": tulipImage.trim(),
-                        "x": 92, "y": 65, "w": 190, "h": 120, "z": 1
+                        "x": 100, "y": 60, "w": 190, "h": 120, "z": 1
                     });
                 }
 
@@ -258,7 +258,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         "name": "Original Note",
                         "id": "img_note_" + generateUUID(),
                         "src": noteImage.trim(),
-                        "x": 100, "y": 65, "w": 198, "h": 120, "z": 1
+                        "x": 100, "y": 60, "w": 198, "h": 120, "z": 1
                     });
                 }
 
@@ -327,8 +327,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     "tulip": {
                         "track": { "roadOut": {}, "roadIn": {}, "z": 0 },
                         "roads": [
-                            { "start": roadInStart, "end": { "x": 92, "y": 65 }, "handles": [], "typeId": 10, "z": 0 },
-                            { "start": { "x": 92, "y": 65 }, "end": roadOutEnd, "handles": [], "typeId": 10, "z": 0 }
+                            { "start": roadInStart, "end": { "x": 100, "y": 112 }, "handles": [], "typeId": 10, "z": 0 },
+                            { "start": { "x": 100, "y": 112 }, "end": roadOutEnd, "handles": [], "typeId": 10, "z": 0 }
                         ],
                         "texts": [], "icons": [], "lines": []
                     },
