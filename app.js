@@ -153,8 +153,36 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // 4. Convert to RN2 format
         let rn2Waypoints = mergedPoints.map((pt, idx) => {
+            // Helper to get heading between two points
+            const getHeading = (p1, p2) => {
+                if (!p1 || !p2) return 0;
+                const dy = p2.lat - p1.lat;
+                const dx = Math.cos(p1.lat * Math.PI / 180) * (p2.lon - p1.lon);
+                return Math.atan2(dx, dy) * 180 / Math.PI;
+            };
+
+            const prevPt = mergedPoints[idx - 1] || pt;
+            const nextPt = mergedPoints[idx + 1] || pt;
+            const angleIn = (getHeading(prevPt, pt) + 180) % 360;
+            const angleOut = getHeading(pt, nextPt);
+
+            // Convert angle to RN2 coordinates (center 100,100, radius 60)
+            const getCoord = (angle, dist = 60) => {
+                const rad = (angle - 90) * Math.PI / 180;
+                return {
+                    x: 100 + dist * Math.cos(rad),
+                    y: 100 + dist * Math.sin(rad)
+                };
+            };
+
+            const roadInEnd = { x: 100, y: 100 };
+            const roadInStart = getCoord(angleIn);
+            const roadOutStart = { x: 100, y: 100 };
+            const roadOutEnd = getCoord(angleOut);
+
             if (pt.isWaypoint) {
                 const wpt = pt.xmlNode;
+                // ... (rest of the existing logic)
                 const extensions = wpt.getElementsByTagName("extensions")[0];
                 // Robust tag extraction
                 const getExtTag = (ext, name) => {
@@ -192,9 +220,26 @@ document.addEventListener('DOMContentLoaded', () => {
                     "lat": pt.lat,
                     "lon": pt.lon,
                     "ele": pt.ele,
-                    "show": true,
-                    "tulip": { "elements": [] },
-                    "notes": { "elements": [], "texts": [] },
+                    "show": pt.isWaypoint,
+                    "showCoordinates": false,
+                    "showHeading": false,
+                    "showStickMarkOnTulip": false,
+                    "tulip": {
+                        "track": {
+                            "roadIn": { "start": roadInStart, "end": roadInEnd, "handles": [], "z": 0 },
+                            "roadOut": { "start": roadOutStart, "end": roadOutEnd, "handles": [], "z": 0 },
+                            "z": 0
+                        },
+                        "roads": [],
+                        "texts": [],
+                        "icons": [],
+                        "lines": []
+                    },
+                    "notes": {
+                        "texts": [],
+                        "icons": [],
+                        "lines": []
+                    },
                     "overridenSmartTags": { "dataType": "Map", "value": [] }
                 };
 
@@ -202,7 +247,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 let hasTulipImage = false;
                 if (tulipImage && tulipImage.includes("data:image")) {
                     hasTulipImage = true;
-                    rn2Wpt.tulip.elements.push({
+                    rn2Wpt.tulip.icons.push({
                         "type": "Icon",
                         "name": "Original Drawing",
                         "id": "img_" + generateUUID(),
@@ -216,7 +261,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 let hasNoteImage = false;
                 if (noteImage && noteImage.includes("data:image")) {
                     hasNoteImage = true;
-                    rn2Wpt.notes.elements.push({
+                    rn2Wpt.notes.icons.push({
                         "type": "Icon",
                         "name": "Original Note",
                         "id": "img_note_" + generateUUID(),
@@ -227,7 +272,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     });
                 }
 
-                // Extract text notes ONLY if no note image is present to avoid duplication
+                // Extract text notes ONLY if no note image is present
                 if (!hasNoteImage) {
                     let noteParts = [];
                     if (name && (isNaN(name) || name.length > 3)) noteParts.push(name);
@@ -245,24 +290,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 // Extract note icons ONLY if no note image is present
                 if (!hasNoteImage) {
-                    if (reset !== undefined) rn2Wpt.notes.elements.push(createIconElement("Reset", ICON_MAPPING['reset'], `<openrally:reset>${reset}</openrally:reset>`, 30));
+                    if (reset !== undefined) rn2Wpt.notes.icons.push(createIconElement("Reset", ICON_MAPPING['reset'], `<openrally:reset>${reset}</openrally:reset>`, 30));
                     
                     let iconX = 80;
                     if (speed) {
-                        rn2Wpt.notes.elements.push(createIconElement(`Speed Limit ${speed}`, ICON_MAPPING['speed_40'], `<speed>${speed}</speed>`, iconX));
+                        rn2Wpt.notes.icons.push(createIconElement(`Speed Limit ${speed}`, ICON_MAPPING['speed_40'], `<speed>${speed}</speed>`, iconX));
                         iconX += 55;
                     }
                     if (fuelNode) {
-                        rn2Wpt.notes.elements.push(createIconElement("Fuel", ICON_MAPPING['fuel'], `<fuel/>`, iconX));
+                        rn2Wpt.notes.icons.push(createIconElement("Fuel", ICON_MAPPING['fuel'], `<fuel/>`, iconX));
                         iconX += 55;
                     }
                     if (danger) {
                         let dId = ICON_MAPPING['danger_' + danger] || ICON_MAPPING['danger_2'];
-                        rn2Wpt.notes.elements.push(createIconElement(`Danger Level ${danger}`, dId, `<danger>${danger}</danger>`, iconX));
+                        rn2Wpt.notes.icons.push(createIconElement(`Danger Level ${danger}`, dId, `<danger>${danger}</danger>`, iconX));
                     }
                 }
 
-                // Special Waypoint Icons (DZ, FZ, DSS, ASS, WPS) - Always add as they are essential for map/odometer
+                // Special Waypoint Icons (DZ, FZ, DSS, ASS, WPS)
                 if (dssNode) rn2Wpt.waypointIcon = createWaypointIcon("Start Special", "dss", ICON_MAPPING['dss'], dssNode);
                 else if (assNode) rn2Wpt.waypointIcon = createWaypointIcon("Finish Special", "ass", ICON_MAPPING['ass'], assNode);
                 else if (fzNode) rn2Wpt.waypointIcon = createWaypointIcon("Finish Speed Limit", "fz", ICON_MAPPING['fz'], fzNode);
@@ -279,8 +324,21 @@ document.addEventListener('DOMContentLoaded', () => {
                     "lon": pt.lon,
                     "ele": 0,
                     "show": false,
-                    "tulip": { "elements": [ { "type": "Track", "roadIn": {"handles": [], "z": 0}, "roadOut": {"handles": [], "z": 0}, "z": 0, "eId": generateUUID() } ] },
-                    "notes": { "elements": [], "texts": [] },
+                    "showCoordinates": false,
+                    "showHeading": false,
+                    "showStickMarkOnTulip": false,
+                    "tulip": {
+                        "track": {
+                            "roadIn": { "start": roadInStart, "end": roadInEnd, "handles": [], "z": 0 },
+                            "roadOut": { "start": roadOutStart, "end": roadOutEnd, "handles": [], "z": 0 },
+                            "z": 0
+                        },
+                        "roads": [],
+                        "texts": [],
+                        "icons": [],
+                        "lines": []
+                    },
+                    "notes": { "texts": [], "icons": [], "lines": [] },
                     "overridenSmartTags": { "dataType": "Map", "value": [] }
                 };
             }
