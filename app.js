@@ -219,8 +219,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     "ele": pt.ele,
                     "show": pt.isWaypoint,
                     "showCoordinates": false,
-                    "showHeading": false,
-                    "showStickMarkOnTulip": false,
+                    "showHeading": true,
+                    "showStickMarkOnTulip": true,
                     "tulip": {
                         "track": { "roadOut": {}, "roadIn": {}, "z": 0 },
                         "roads": [
