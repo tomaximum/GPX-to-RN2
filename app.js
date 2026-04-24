@@ -166,18 +166,18 @@ document.addEventListener('DOMContentLoaded', () => {
             const angleIn = (getHeading(prevPt, pt) + 180) % 360;
             const angleOut = getHeading(pt, nextPt);
 
-            // Convert angle to RN2 coordinates (center 100,100, radius 60)
-            const getCoord = (angle, dist = 60) => {
+            // Convert angle to RN2 coordinates (center 100,60 for better vertical alignment in RN boxes)
+            const getCoord = (angle, dist = 45) => {
                 const rad = (angle - 90) * Math.PI / 180;
                 return {
                     x: 100 + dist * Math.cos(rad),
-                    y: 100 + dist * Math.sin(rad)
+                    y: 60 + dist * Math.sin(rad)
                 };
             };
 
-            const roadInEnd = { x: 100, y: 100 };
+            const roadInEnd = { x: 100, y: 60 };
             const roadInStart = getCoord(angleIn);
-            const roadOutStart = { x: 100, y: 100 };
+            const roadOutStart = { x: 100, y: 60 };
             const roadOutEnd = getCoord(angleOut);
 
             if (pt.isWaypoint) {
@@ -230,10 +230,10 @@ document.addEventListener('DOMContentLoaded', () => {
                                 "end": roadOutEnd,
                                 "handles": [],
                                 "typeId": 10,
-                                "z": 0
+                                "z": 5
                             },
                             "roadIn": {},
-                            "z": 2
+                            "z": 4
                         },
                         "roads": [],
                         "texts": [],
@@ -256,7 +256,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         "name": "Original Drawing",
                         "id": "img_" + generateUUID(),
                         "src": tulipImage.trim(),
-                        "x": 100, "y": 100, "w": 190, "h": 190, "z": 10
+                        "x": 100, "y": 60, "w": 190, "h": 120, "z": 1
                     });
                 }
 
@@ -267,7 +267,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         "name": "Original Note",
                         "id": "img_note_" + generateUUID(),
                         "src": noteImage.trim(),
-                        "x": 100, "y": 100, "w": 198, "h": 180, "z": 10
+                        "x": 100, "y": 60, "w": 198, "h": 120, "z": 1
                     });
                 }
 
