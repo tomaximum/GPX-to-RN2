@@ -247,7 +247,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         "name": "Original Drawing",
                         "id": "img_" + generateUUID(),
                         "src": tulipImage.trim(),
-                        "x": 92, "y": 58, "w": 190, "h": 120, "z": 1
+                        "x": 92, "y": 65, "w": 190, "h": 120, "z": 1
                     });
                 }
 
@@ -258,7 +258,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         "name": "Original Note",
                         "id": "img_note_" + generateUUID(),
                         "src": noteImage.trim(),
-                        "x": 100, "y": 60, "w": 198, "h": 120, "z": 1
+                        "x": 100, "y": 65, "w": 198, "h": 120, "z": 1
                     });
                 }
 
