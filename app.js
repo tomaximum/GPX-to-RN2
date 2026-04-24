@@ -166,12 +166,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const angleIn = (getHeading(prevPt, pt) + 180) % 360;
             const angleOut = getHeading(pt, nextPt);
 
-            // Convert angle to RN2 coordinates (center 100,112 to align with the geographic pin/anchor)
+            // Convert angle to RN2 coordinates (center 100,60 for perfect superposition with original drawings)
             const getCoord = (angle, d = 30) => {
                 const rad = (angle - 90) * Math.PI / 180;
                 return {
                     x: 100 + d * Math.cos(rad),
-                    y: 112 + d * Math.sin(rad)
+                    y: 60 + d * Math.sin(rad)
                 };
             };
 
@@ -224,8 +224,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     "tulip": {
                         "track": { "roadOut": {}, "roadIn": {}, "z": 0 },
                         "roads": [
-                            { "start": roadInStart, "end": { "x": 100, "y": 112 }, "handles": [], "typeId": 10, "z": 5 },
-                            { "start": { "x": 100, "y": 112 }, "end": roadOutEnd, "handles": [], "typeId": 10, "z": 5 }
+                            { "start": roadInStart, "end": { "x": 100, "y": 60 }, "handles": [], "typeId": 10, "z": 5 },
+                            { "start": { "x": 100, "y": 60 }, "end": roadOutEnd, "handles": [], "typeId": 10, "z": 5 }
                         ],
                         "texts": [],
                         "icons": [],
@@ -327,8 +327,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     "tulip": {
                         "track": { "roadOut": {}, "roadIn": {}, "z": 0 },
                         "roads": [
-                            { "start": roadInStart, "end": { "x": 100, "y": 112 }, "handles": [], "typeId": 10, "z": 0 },
-                            { "start": { "x": 100, "y": 112 }, "end": roadOutEnd, "handles": [], "typeId": 10, "z": 0 }
+                            { "start": roadInStart, "end": { "x": 100, "y": 60 }, "handles": [], "typeId": 10, "z": 0 },
+                            { "start": { "x": 100, "y": 60 }, "end": roadOutEnd, "handles": [], "typeId": 10, "z": 0 }
                         ],
                         "texts": [], "icons": [], "lines": []
                     },
