@@ -166,12 +166,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const angleIn = (getHeading(prevPt, pt) + 180) % 360;
             const angleOut = getHeading(pt, nextPt);
 
-            // Convert angle to RN2 coordinates (center 100,60 for perfect superposition with original drawings)
+            // Convert angle to RN2 coordinates (precision center 92,58 for perfect superposition)
             const getCoord = (angle, d = 30) => {
                 const rad = (angle - 90) * Math.PI / 180;
                 return {
-                    x: 100 + d * Math.cos(rad),
-                    y: 60 + d * Math.sin(rad)
+                    x: 92 + d * Math.cos(rad),
+                    y: 58 + d * Math.sin(rad)
                 };
             };
 
@@ -224,8 +224,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     "tulip": {
                         "track": { "roadOut": {}, "roadIn": {}, "z": 0 },
                         "roads": [
-                            { "start": roadInStart, "end": { "x": 100, "y": 60 }, "handles": [], "typeId": 10, "z": 5 },
-                            { "start": { "x": 100, "y": 60 }, "end": roadOutEnd, "handles": [], "typeId": 10, "z": 5 }
+                            { "start": roadInStart, "end": { "x": 92, "y": 58 }, "handles": [], "typeId": 10, "z": 5 },
+                            { "start": { "x": 92, "y": 58 }, "end": roadOutEnd, "handles": [], "typeId": 10, "z": 5 }
                         ],
                         "texts": [],
                         "icons": [],
@@ -247,7 +247,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         "name": "Original Drawing",
                         "id": "img_" + generateUUID(),
                         "src": tulipImage.trim(),
-                        "x": 100, "y": 60, "w": 190, "h": 120, "z": 1
+                        "x": 92, "y": 58, "w": 190, "h": 120, "z": 1
                     });
                 }
 
@@ -327,8 +327,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     "tulip": {
                         "track": { "roadOut": {}, "roadIn": {}, "z": 0 },
                         "roads": [
-                            { "start": roadInStart, "end": { "x": 100, "y": 60 }, "handles": [], "typeId": 10, "z": 0 },
-                            { "start": { "x": 100, "y": 60 }, "end": roadOutEnd, "handles": [], "typeId": 10, "z": 0 }
+                            { "start": roadInStart, "end": { "x": 92, "y": 58 }, "handles": [], "typeId": 10, "z": 0 },
+                            { "start": { "x": 92, "y": 58 }, "end": roadOutEnd, "handles": [], "typeId": 10, "z": 0 }
                         ],
                         "texts": [], "icons": [], "lines": []
                     },
