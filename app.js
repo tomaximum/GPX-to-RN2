@@ -166,18 +166,16 @@ document.addEventListener('DOMContentLoaded', () => {
             const angleIn = (getHeading(prevPt, pt) + 180) % 360;
             const angleOut = getHeading(pt, nextPt);
 
-            // Convert angle to RN2 coordinates (center 100,60 for better vertical alignment in RN boxes)
-            const getCoord = (angle, dist = 45) => {
+            // Convert angle to RN2 coordinates (center 100,60, compact dist 30)
+            const getCoord = (angle, d = 30) => {
                 const rad = (angle - 90) * Math.PI / 180;
                 return {
-                    x: 100 + dist * Math.cos(rad),
-                    y: 60 + dist * Math.sin(rad)
+                    x: 100 + d * Math.cos(rad),
+                    y: 60 + d * Math.sin(rad)
                 };
             };
 
-            const roadInEnd = { x: 100, y: 60 };
             const roadInStart = getCoord(angleIn);
-            const roadOutStart = { x: 100, y: 60 };
             const roadOutEnd = getCoord(angleOut);
 
             if (pt.isWaypoint) {
@@ -224,18 +222,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     "showHeading": false,
                     "showStickMarkOnTulip": false,
                     "tulip": {
-                        "track": {
-                            "roadOut": {
-                                "start": roadOutStart,
-                                "end": roadOutEnd,
-                                "handles": [],
-                                "typeId": 10,
-                                "z": 5
-                            },
-                            "roadIn": {},
-                            "z": 4
-                        },
-                        "roads": [],
+                        "track": { "roadOut": {}, "roadIn": {}, "z": 0 },
+                        "roads": [
+                            { "start": roadInStart, "end": { "x": 100, "y": 60 }, "handles": [], "typeId": 10, "z": 5 },
+                            { "start": { "x": 100, "y": 60 }, "end": roadOutEnd, "handles": [], "typeId": 10, "z": 5 }
+                        ],
                         "texts": [],
                         "icons": [],
                         "lines": []
@@ -334,12 +325,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     "showHeading": false,
                     "showStickMarkOnTulip": false,
                     "tulip": {
-                        "track": {
-                            "roadOut": { "start": roadOutStart, "end": roadOutEnd, "handles": [], "typeId": 10, "z": 0 },
-                            "roadIn": {},
-                            "z": 2
-                        },
-                        "roads": [], "texts": [], "icons": [], "lines": []
+                        "track": { "roadOut": {}, "roadIn": {}, "z": 0 },
+                        "roads": [
+                            { "start": roadInStart, "end": { "x": 100, "y": 60 }, "handles": [], "typeId": 10, "z": 0 },
+                            { "start": { "x": 100, "y": 60 }, "end": roadOutEnd, "handles": [], "typeId": 10, "z": 0 }
+                        ],
+                        "texts": [], "icons": [], "lines": []
                     },
                     "notes": { "texts": [], "icons": [], "lines": [] },
                     "overridenSmartTags": { "dataType": "Map", "value": [] }
