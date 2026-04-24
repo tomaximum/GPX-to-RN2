@@ -212,7 +212,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 const desc = wpt.getElementsByTagName("desc")[0]?.textContent;
                 const cmt = wpt.getElementsByTagName("cmt")[0]?.textContent;
 
-                // Calculate heading for display
                 const headingVal = Math.round(angleOut);
 
                 let rn2Wpt = {
@@ -220,7 +219,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     "lat": pt.lat,
                     "lon": pt.lon,
                     "ele": pt.ele,
-                    "show": true, // Force show for waypoints to get the number circle
+                    "show": pt.isWaypoint, // Restore selective showing
                     "showCoordinates": false,
                     "showHeading": true,
                     "showStickMarkOnTulip": true,
@@ -239,14 +238,12 @@ document.addEventListener('DOMContentLoaded', () => {
                         "icons": [],
                         "lines": []
                     },
-                    "waypointIcon": {
-                        "name": "Heading",
-                        "type": "heading",
-                        "position": "tulip",
-                        "system": true,
-                        "disabled": false
-                    },
-                    "overridenSmartTags": { "dataType": "Map", "value": [] }
+                    "overridenSmartTags": { 
+                        "dataType": "Map", 
+                        "value": [
+                            ["heading", { "show": true, "position": "tulip" }]
+                        ] 
+                    }
                 };
 
                 // Visual Recovery: Inject Base64 images as custom icons
