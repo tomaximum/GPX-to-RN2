@@ -230,16 +230,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             { "start": roadInStart, "end": { "x": 100, "y": 60 }, "handles": [], "typeId": 10, "z": 5 },
                             { "start": { "x": 100, "y": 60 }, "end": roadOutEnd, "handles": [], "typeId": 10, "z": 5 }
                         ],
-                        "texts": [
-                            {
-                                "text": headingVal.toString(),
-                                "x": 150, "y": 25, "w": 40, "h": 20,
-                                "fontSize": 14, "fontWeight": "bold",
-                                "backgroundColor": "#FFEB3B", // Yellow like the original
-                                "color": "#000000",
-                                "z": 10
-                            }
-                        ],
+                        "texts": [],
                         "icons": [],
                         "lines": []
                     },
@@ -247,6 +238,13 @@ document.addEventListener('DOMContentLoaded', () => {
                         "texts": [],
                         "icons": [],
                         "lines": []
+                    },
+                    "waypointIcon": {
+                        "name": "Heading",
+                        "type": "heading",
+                        "position": "tulip",
+                        "system": true,
+                        "disabled": false
                     },
                     "overridenSmartTags": { "dataType": "Map", "value": [] }
                 };
@@ -364,9 +362,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     "showCoordinates": true,
                     "showHeadings": true,
                     "showAlternateDistance": false,
-                    "showControlPointDetails": false,
+                    "showControlPointDetails": true,
                     "hundredthsStyle": "on",
-                    "showControlPointOrdinals": false,
+                    "showControlPointOrdinals": true,
                     "trackColor": 2,
                     "defaultTrackType": 4
                 }
