@@ -215,7 +215,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 const cmt = wpt.getElementsByTagName("cmt")[0]?.textContent;
 
                 let rn2Wpt = {
-                    "t_uuid": "wpt_uuid_" + generateUUID(),
                     "waypointid": idx,
                     "lat": pt.lat,
                     "lon": pt.lon,
@@ -226,9 +225,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     "showStickMarkOnTulip": false,
                     "tulip": {
                         "track": {
-                            "roadIn": { "start": roadInStart, "end": roadInEnd, "handles": [], "z": 0 },
-                            "roadOut": { "start": roadOutStart, "end": roadOutEnd, "handles": [], "z": 0 },
-                            "z": 0
+                            "roadOut": {
+                                "start": roadOutStart,
+                                "end": roadOutEnd,
+                                "handles": [],
+                                "typeId": 10,
+                                "z": 0
+                            },
+                            "roadIn": {},
+                            "z": 2
                         },
                         "roads": [],
                         "texts": [],
@@ -248,13 +253,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (tulipImage && tulipImage.includes("data:image")) {
                     hasTulipImage = true;
                     rn2Wpt.tulip.icons.push({
-                        "type": "Icon",
                         "name": "Original Drawing",
                         "id": "img_" + generateUUID(),
                         "src": tulipImage.trim(),
-                        "x": 100, "y": 100, "w": 190, "h": 190, "z": 10,
-                        "rerender": false,
-                        "eId": generateUUID()
+                        "x": 100, "y": 100, "w": 190, "h": 190, "z": 10
                     });
                 }
 
@@ -262,13 +264,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (noteImage && noteImage.includes("data:image")) {
                     hasNoteImage = true;
                     rn2Wpt.notes.icons.push({
-                        "type": "Icon",
                         "name": "Original Note",
                         "id": "img_note_" + generateUUID(),
                         "src": noteImage.trim(),
-                        "x": 100, "y": 100, "w": 198, "h": 180, "z": 10,
-                        "rerender": false,
-                        "eId": generateUUID()
+                        "x": 100, "y": 100, "w": 198, "h": 180, "z": 10
                     });
                 }
 
@@ -290,24 +289,32 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 // Extract note icons ONLY if no note image is present
                 if (!hasNoteImage) {
-                    if (reset !== undefined) rn2Wpt.notes.icons.push(createIconElement("Reset", ICON_MAPPING['reset'], `<openrally:reset>${reset}</openrally:reset>`, 30));
+                    if (reset !== undefined) {
+                        rn2Wpt.notes.icons.push({
+                            "name": "Reset",
+                            "id": ICON_MAPPING['reset'],
+                            "src": `/icons/${ICON_MAPPING['reset']}.svg`,
+                            "gpx_tags": `<reset>${reset}</reset>`,
+                            "x": 30, "y": 100, "w": 50, "z": 3,
+                            "system": true
+                        });
+                    }
                     
                     let iconX = 80;
                     if (speed) {
-                        rn2Wpt.notes.icons.push(createIconElement(`Speed Limit ${speed}`, ICON_MAPPING['speed_40'], `<speed>${speed}</speed>`, iconX));
+                        rn2Wpt.notes.icons.push({
+                            "name": "Speed",
+                            "id": ICON_MAPPING['speed_40'],
+                            "src": `/icons/${ICON_MAPPING['speed_40']}.svg`,
+                            "gpx_tags": `<speed>${speed}</speed>`,
+                            "x": iconX, "y": 100, "w": 50, "z": 3,
+                            "system": true
+                        });
                         iconX += 55;
-                    }
-                    if (fuelNode) {
-                        rn2Wpt.notes.icons.push(createIconElement("Fuel", ICON_MAPPING['fuel'], `<fuel/>`, iconX));
-                        iconX += 55;
-                    }
-                    if (danger) {
-                        let dId = ICON_MAPPING['danger_' + danger] || ICON_MAPPING['danger_2'];
-                        rn2Wpt.notes.icons.push(createIconElement(`Danger Level ${danger}`, dId, `<danger>${danger}</danger>`, iconX));
                     }
                 }
 
-                // Special Waypoint Icons (DZ, FZ, DSS, ASS, WPS)
+                // Special Waypoint Icons
                 if (dssNode) rn2Wpt.waypointIcon = createWaypointIcon("Start Special", "dss", ICON_MAPPING['dss'], dssNode);
                 else if (assNode) rn2Wpt.waypointIcon = createWaypointIcon("Finish Special", "ass", ICON_MAPPING['ass'], assNode);
                 else if (fzNode) rn2Wpt.waypointIcon = createWaypointIcon("Finish Speed Limit", "fz", ICON_MAPPING['fz'], fzNode);
@@ -318,7 +325,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 return rn2Wpt;
             } else {
                 return {
-                    "t_uuid": "wpt_uuid_" + generateUUID(),
                     "waypointid": idx,
                     "lat": pt.lat,
                     "lon": pt.lon,
@@ -329,14 +335,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     "showStickMarkOnTulip": false,
                     "tulip": {
                         "track": {
-                            "roadIn": { "start": roadInStart, "end": roadInEnd, "handles": [], "z": 0 },
-                            "roadOut": { "start": roadOutStart, "end": roadOutEnd, "handles": [], "z": 0 },
-                            "z": 0
+                            "roadOut": { "start": roadOutStart, "end": roadOutEnd, "handles": [], "typeId": 10, "z": 0 },
+                            "roadIn": {},
+                            "z": 2
                         },
-                        "roads": [],
-                        "texts": [],
-                        "icons": [],
-                        "lines": []
+                        "roads": [], "texts": [], "icons": [], "lines": []
                     },
                     "notes": { "texts": [], "icons": [], "lines": [] },
                     "overridenSmartTags": { "dataType": "Map", "value": [] }
@@ -346,18 +349,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
         return {
             "route": {
-                "version": 4,
+                "version": 3,
                 "name": fileName.replace('.gpx', ''),
                 "description": "Converted from GPX OpenRally",
                 "current_style": "cross_country",
                 "waypoints": rn2Waypoints,
                 "settings": {
                     "units": "metric",
-                    "coordFormat": 1,
                     "showHighlight": true,
                     "showDistanceTickMark": true,
-                    "showCoordinates": false,
-                    "hundredthsStyle": "on"
+                    "showCoordinates": true,
+                    "showHeadings": true,
+                    "showAlternateDistance": false,
+                    "showControlPointDetails": false,
+                    "hundredthsStyle": "on",
+                    "showControlPointOrdinals": false,
+                    "trackColor": 2,
+                    "defaultTrackType": 4
                 }
             }
         };
