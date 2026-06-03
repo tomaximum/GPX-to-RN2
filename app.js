@@ -4,22 +4,225 @@
  * Year: 2026
  */
 
-// Mapping dictionary for Rally Navigator Icon IDs
-const ICON_MAPPING = {
-    'reset': '308c7365-bc3f-451b-9e98-531e9015024f',
-    'speed_40': '0e5e32f1-0b62-467b-b3b9-9066de77df6f',
-    'dz': 'abcf7797-9827-44b1-b061-2e3230c33b5d', // Start Speed
-    'fz': '854d3cb4-cee2-4648-aa48-a48ab985a09c', // Finish Speed
-    'wpv': 'd08fc9f2-8d64-4708-877d-a66437746f8b', // Visible WP
-    'wps': '95e8e77e-6422-4401-a1bc-7f48712df130', // Safety/Secret WP
-    'danger_1': '576884ff-4ca3-4ffd-be7c-580a62db85ad',
-    'danger_2': 'a6c80c12-49b1-4e68-a21f-a6d48ef0a0ed',
-    'danger_3': '10bbbf0f-4703-4c7d-a53a-68ee9c5216cc',
-    'dss': '0a1d95e6-3bef-45ff-b605-4f2bcf7735d9', // Start Selective
-    'ass': 'ec316c9b-0dcf-4823-ace0-1ed5c570f16f', // Finish Selective
-    'fuel': '8f673b0a-7c9e-4c5a-8b0a-5b0a5b0a5b0a', // Fuel
-    'caution': 'ce7da75a-abf3-46e4-8eb8-668b27aa870c'
+// --- Mapping Dictionaries ---
+
+const WAYPOINT_ICON_MAPPING = {
+    'dss': {
+        name: "Départ du Secteur Sélectif",
+        id: "0a1d95e6-3bef-45ff-b605-4f2bcf7735d9",
+        legacy_id: 39,
+        src: "/icons/0a1d95e6-3bef-45ff-b605-4f2bcf7735d9.svg",
+        gpx_tags: "<dss open='${open}' clear='${clear}'/>",
+        disabled: false,
+        show_on_map: true,
+        type: "dss",
+        position: "wpm",
+        map_color: "#ec2227"
+    },
+    'ass': {
+        name: "Arrivée Secteur Sélectif",
+        id: "e252bf77-328c-4148-a71d-1c2f19a7e8a8",
+        legacy_id: 34,
+        src: "/icons/e252bf77-328c-4148-a71d-1c2f19a7e8a8.svg",
+        gpx_tags: "<ass open='${open}' clear='${clear}'/>",
+        disabled: false,
+        show_on_map: true,
+        type: "ass",
+        position: "wpm",
+        map_color: "#C0463A"
+    },
+    'cp': {
+        name: "Point de contrôle",
+        id: "f7b3f980-2a69-4ab6-a87f-318b2514ea6a",
+        legacy_id: 37,
+        src: "/icons/f7b3f980-2a69-4ab6-a87f-318b2514ea6a.svg",
+        gpx_tags: "<checkpoint open='${open}' clear='${clear}'/>",
+        disabled: false,
+        show_on_map: true,
+        type: "cp",
+        position: "wpm",
+        map_color: "#f580eb"
+    },
+    'dz': {
+        name: "Début de limitation de vitesse",
+        id: "abcf7797-9827-44b1-b061-2e3230c33b5d",
+        legacy_id: 41,
+        src: "/icons/abcf7797-9827-44b1-b061-2e3230c33b5d.svg",
+        gpx_tags: "<dz open='${open}' clear='${clear}'/>",
+        disabled: false,
+        show_on_map: true,
+        type: "dz",
+        position: "wpm",
+        map_color: "#f99520"
+    },
+    'fz': {
+        name: "Fin de limitation de vitesse",
+        id: "854d3cb4-cee2-4648-aa48-a48ab985a09c",
+        legacy_id: 33,
+        src: "/icons/854d3cb4-cee2-4648-aa48-a48ab985a09c.svg",
+        gpx_tags: "<fz open='${open}' clear='${clear}'/>",
+        disabled: false,
+        show_on_map: true,
+        type: "fz",
+        position: "wpm",
+        map_color: "#3db54a"
+    },
+    'sn': {
+        name: "Début neutralisation",
+        id: "65f3d599-ea98-4cfd-93de-7487de5f61c8",
+        legacy_id: 203366,
+        src: "/icons/65f3d599-ea98-4cfd-93de-7487de5f61c8.svg",
+        gpx_tags: "<neutralization open='${open}' clear='${clear}' time='${time}'/>",
+        disabled: false,
+        show_on_map: true,
+        type: "sn",
+        position: "wpm",
+        map_color: "#e48d72"
+    },
+    'fn': {
+        name: "Fin neutralisation",
+        id: "0e832ea0-e186-495c-98f9-8e75d73fd242",
+        legacy_id: 158004,
+        src: "/icons/0e832ea0-e186-495c-98f9-8e75d73fd242.svg",
+        gpx_tags: "<fn open='${open}' clear='${clear}'/>",
+        disabled: false,
+        show_on_map: true,
+        type: "fn",
+        position: "wpm",
+        map_color: "#D0CECF"
+    },
+    'wps': {
+        name: "WP Sécurité",
+        id: "95e8e77e-6422-4401-a1bc-7f48712df130",
+        legacy_id: 906024,
+        src: "/icons/95e8e77e-6422-4401-a1bc-7f48712df130.svg",
+        gpx_tags: "<wps open='${open}' clear='${clear}'/>",
+        bgcolor: "#fdcecf",
+        disabled: false,
+        show_on_map: true,
+        type: "wps",
+        position: "wpm",
+        map_color: "#ec2227"
+    },
+    'wpc': {
+        name: "WP Contrôle",
+        id: "76d4219b-966b-4920-a773-fa2981c48437",
+        legacy_id: 700,
+        src: "/icons/76d4219b-966b-4920-a773-fa2981c48437.svg",
+        gpx_tags: "<wpc clear='${clear}'/>",
+        bgcolor: "#fdffbe",
+        disabled: false,
+        show_on_map: true,
+        type: "wpc",
+        position: "wpm",
+        map_color: "#fcee23"
+    },
+    'wpv': {
+        name: "WP Visible",
+        id: "d08fc9f2-8d64-4708-877d-a66437746f8b",
+        legacy_id: 751647,
+        src: "/icons/d08fc9f2-8d64-4708-877d-a66437746f8b.svg",
+        gpx_tags: "<wpv open='${open}' clear='${clear}'/>",
+        bgcolor: "#c2fefe",
+        disabled: false,
+        show_on_map: true,
+        type: "wpv",
+        position: "wpm",
+        map_color: "#5bffff"
+    },
+    'wpe': {
+        name: "WP Eclipse",
+        id: "5f8c8069-9c50-4ae1-913f-11d2adb8a12b",
+        legacy_id: 44,
+        src: "/icons/5f8c8069-9c50-4ae1-913f-11d2adb8a12b.svg",
+        gpx_tags: "<wpe open='${open}' clear='${clear}'/>",
+        bgcolor: "transparent",
+        disabled: false,
+        show_on_map: true,
+        type: "wpe",
+        position: "wpm",
+        map_color: "#5bffff"
+    },
+    'wpm': {
+        name: "WP Masqué",
+        id: "69c431e6-c020-442f-94d2-42aaa9f9d55f",
+        legacy_id: 45,
+        src: "/icons/69c431e6-c020-442f-94d2-42aaa9f9d55f.svg",
+        gpx_tags: "<wpm open='${open}' clear='${clear}'/>",
+        bgcolor: "#c2fefe",
+        disabled: false,
+        show_on_map: true,
+        type: "wpm",
+        position: "wpm",
+        map_color: "#5bffff"
+    },
+    'wpn': {
+        name: "WP Navigation",
+        id: "13ca5a7c-624d-4d0a-9792-0138420c7e2e",
+        legacy_id: 798164,
+        src: "/icons/13ca5a7c-624d-4d0a-9792-0138420c7e2e.svg",
+        gpx_tags: "<wpn open='${open}' clear='${clear}'/>",
+        bgcolor: "#ff20fb",
+        disabled: false,
+        show_on_map: true,
+        type: "wpn",
+        position: "wpm",
+        map_color: "#ff20fb"
+    },
+    'wpp': {
+        name: "WP Précis",
+        id: "c913f0e8-a3a1-4ca3-abae-4ca2d9f6facf",
+        src: "/icons/c913f0e8-a3a1-4ca3-abae-4ca2d9f6facf.svg",
+        gpx_tags: "<wpp open='${open}' clear='${clear}' show='${show}' />",
+        bgcolor: "transparent",
+        disabled: false,
+        show_on_map: true,
+        type: "wpp",
+        position: "wpm",
+        no_print: true
+    }
 };
+
+const SPEED_LIMIT_MAPPING = {
+    '30': {
+        dz: { name: "Speed Limit 30", id: "33b6a49a-6796-44e3-a173-37437993e0e3", legacy_id: 53 },
+        fz: { name: "End Speed Limit 30", id: "999b9615-f333-4b2f-a1d7-938554077116", legacy_id: 743481 }
+    },
+    '40': {
+        dz: { name: "Limitation de vitesse 40", id: "0e5e32f1-0b62-467b-b3b9-9066de77df6f", legacy_id: 49 },
+        fz: { name: "Fin de limitation de vitesse 40", id: "76b38a8b-3094-47d5-b48a-dc216a7e14c2", legacy_id: 743480 }
+    },
+    '50': {
+        dz: { name: "Limitation de vitesse 50", id: "53cb2146-c977-41ec-8132-b648cf87fa78", legacy_id: 47 },
+        fz: { name: "Fin de limitation de vitesse 50", id: "db0f1e9c-d20d-4960-8f95-77344b86ff06", legacy_id: 946278 }
+    },
+    '60': {
+        dz: { name: "Limitation de vitesse 60", id: "eda0a1dc-f08f-45a4-bf5a-ca994df19231", legacy_id: 48 },
+        fz: { name: "Fin de limitation de vitesse 60", id: "da9c1ff1-4e4c-49bd-b160-f2ce8281e149", legacy_id: 946279 }
+    }
+};
+
+const DANGER_MAPPING = {
+    '1': { name: "Danger niveau 1", id: "bffeadbd-116b-49a7-921e-20dff8deec4b", legacy_id: 75 },
+    '2': { name: "Danger niveau 2", id: "a6c80c12-49b1-4e68-a21f-a6d48ef0a0ed", legacy_id: 76 },
+    '3': { name: "Danger niveau 3", id: "fab72ac2-f809-4ddc-9a7a-c9a24768bb4e", legacy_id: 77 }
+};
+
+const KEYWORD_TULIP_MAPPING = [
+    { keywords: ["dune", "dunes"], name: "Dunes", id: "3ae02ee8-fb07-4055-813f-c36711a16752", legacy_id: 110, w: 50 },
+    { keywords: ["étroit", "passage étroit", "etroit"], name: "Narrow Passage", id: "86be6844-fddc-4709-83d7-01834c5a6786", legacy_id: 84, w: 50 },
+    { keywords: ["arbre", "arbres", "vegetation", "végétation"], name: "Tree", id: "9590a858-0a15-431c-a2d1-84a9b66d74f1", legacy_id: 95, w: 50 }
+];
+
+const KEYWORD_NOTES_MAPPING = [
+    { keywords: ["piste principale", "suivre la piste", "suivre piste", "track"], name: "Principal Track / Piste", id: "903f4889-d13f-4c92-86a5-54351e7e33e8", legacy_id: 126, w: 70 },
+    { keywords: ["rester à droite", "a droite", "rester a droite", "droite"], name: "On Right", id: "3f890f11-5dc2-4c02-a8a6-97a2e3c2c079", legacy_id: 106, w: 70 },
+    { keywords: ["rester à gauche", "a gauche", "rester a gauche", "gauche"], name: "Left", id: "f5150126-0382-4c34-b851-16a1600ae955", legacy_id: 142, w: 70 },
+    { keywords: ["tout droit", "keep straight"], name: "Keep Straight", id: "58fda34e-3984-4009-8ff5-0f8a82f53db4", legacy_id: 127, w: 70 },
+    { keywords: ["quitter", "sortir", "leave"], name: "Quit / Leave", id: "7b9db3e8-942f-42c4-b784-6e7cb1d3abfd", legacy_id: 130, w: 70 }
+];
+
+// --- Main Application Setup ---
 
 document.addEventListener('DOMContentLoaded', () => {
     const dropZone = document.getElementById('drop-zone');
@@ -134,55 +337,97 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         // 3. Create a combined list by inserting waypoints into the track
-        // We iterate through track points and insert waypoints at their closest position
         let mergedPoints = [];
-        let wptMap = new Map();
-        roadbookWaypoints.forEach(w => {
-            if (!wptMap.has(w.closestIndex)) wptMap.set(w.closestIndex, []);
-            wptMap.get(w.closestIndex).push(w);
-        });
+        if (trackPoints.length === 0) {
+            mergedPoints = roadbookWaypoints;
+        } else {
+            let wptMap = new Map();
+            roadbookWaypoints.forEach(w => {
+                if (!wptMap.has(w.closestIndex)) wptMap.set(w.closestIndex, []);
+                wptMap.get(w.closestIndex).push(w);
+            });
 
-        for (let i = 0; i < trackPoints.length; i++) {
-            // If waypoints are anchored to this track point, add them first
-            if (wptMap.has(i)) {
-                wptMap.get(i).forEach(w => mergedPoints.push(w));
-            } else {
-                mergedPoints.push(trackPoints[i]);
+            for (let i = 0; i < trackPoints.length; i++) {
+                if (wptMap.has(i)) {
+                    wptMap.get(i).forEach(w => mergedPoints.push(w));
+                } else {
+                    mergedPoints.push(trackPoints[i]);
+                }
             }
         }
 
-        // 4. Convert to RN2 format
+        // Sequential state tracker for speed limits
+        let currentSpeedLimit = null;
+
+        // Helper to construct yellow Cap boxes
+        function createCapElement(capType) {
+            const capConfig = {
+                'cap_avg': { name: "CAP moyen", id: "e21cc1a3-1c27-4a80-bbb9-9c85a71b4397", legacy_id: 234, src: "${cap}\nA", x: 152, y: 60, recalculate: true },
+                'cap_calc': { name: "CAP calculé (HP uniquement)", id: "273ed50c-1385-4dca-afa3-5378f81e54b8", legacy_id: 235, src: "${cap}\nC", x: 166, y: 74, recalculate: true },
+                'cap': { name: "Sortir du CAP", id: "015dce7c-2922-41c3-ab17-40ff9ff6340e", legacy_id: 208, src: "${cap}", x: 165, y: 46 }
+            }[capType] || { name: "Sortir du CAP", id: "015dce7c-2922-41c3-ab17-40ff9ff6340e", legacy_id: 208, src: "${cap}", x: 165, y: 46 };
+
+            return {
+                "name": capConfig.name,
+                "id": capConfig.id,
+                "legacy_id": capConfig.legacy_id,
+                "src": capConfig.src,
+                "convert_to": capConfig.src,
+                "gpx_tags": "<cap>${cap}</cap>",
+                "disabled": false,
+                "cap_type": capType,
+                "show_on_map": false,
+                "system": true,
+                "eId": generateUUID(),
+                "type": "Text",
+                "x": capConfig.x,
+                "y": capConfig.y,
+                "editable": false,
+                "textBackgroundColor": "#fdef48",
+                "fontSize": 32,
+                "cap": true,
+                "rerender": false,
+                ...(capConfig.recalculate ? { "recalculate": true } : {})
+            };
+        }
+
+        // Helper to construct waypointIcon node
+        function createWaypointIcon(name, type, id, xmlNode) {
+            const options = {};
+            if (xmlNode) {
+                for (let attr of xmlNode.attributes) {
+                    let val = attr.value;
+                    if (val === "true") options[attr.name] = true;
+                    else if (val === "false") options[attr.name] = false;
+                    else if (!isNaN(val)) options[attr.name] = parseFloat(val);
+                    else options[attr.name] = val;
+                }
+            }
+            return {
+                "name": name,
+                "id": id,
+                "src": `/icons/${id}.svg`,
+                "type": type,
+                "options": options,
+                "system": true,
+                "eId": generateUUID()
+            };
+        }
+
+        // Helper to search text for keywords
+        function checkKeywords(text, mapping) {
+            if (!text) return null;
+            const normText = text.toLowerCase();
+            return mapping.find(item => item.keywords.some(kw => normText.includes(kw)));
+        }
+
+        // 4. Convert each point to RN2 structure
         let rn2Waypoints = mergedPoints.map((pt, idx) => {
-            // Helper to get heading between two points
-            const getHeading = (p1, p2) => {
-                if (!p1 || !p2) return 0;
-                const dy = p2.lat - p1.lat;
-                const dx = Math.cos(p1.lat * Math.PI / 180) * (p2.lon - p1.lon);
-                return Math.atan2(dx, dy) * 180 / Math.PI;
-            };
-
-            const prevPt = mergedPoints[idx - 1] || pt;
-            const nextPt = mergedPoints[idx + 1] || pt;
-            const angleIn = (getHeading(prevPt, pt) + 180) % 360;
-            const angleOut = getHeading(pt, nextPt);
-
-            // Convert angle to RN2 coordinates (strictly centered 100,60 for vector arrows)
-            const getCoord = (angle, d = 30) => {
-                const rad = (angle - 90) * Math.PI / 180;
-                return {
-                    x: 100 + d * Math.cos(rad),
-                    y: 60 + d * Math.sin(rad)
-                };
-            };
-
-            const roadInStart = getCoord(angleIn);
-            const roadOutEnd = getCoord(angleOut);
-
             if (pt.isWaypoint) {
                 const wpt = pt.xmlNode;
-                // ... (rest of the existing logic)
                 const extensions = wpt.getElementsByTagName("extensions")[0];
-                // Robust tag extraction
+                
+                // Extracting OpenRally extensions
                 const getExtTag = (ext, name) => {
                     if (!ext) return null;
                     const tags = ext.getElementsByTagNameNS ? ext.getElementsByTagNameNS("*", name) : [];
@@ -197,14 +442,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 const fzNode = getExtTag(extensions, "fz");
                 const dssNode = getExtTag(extensions, "dss");
                 const assNode = getExtTag(extensions, "ass");
+                const cpNode = getExtTag(extensions, "cp") || getExtTag(extensions, "checkpoint");
                 const fuelNode = getExtTag(extensions, "fuel");
+                const stopNode = getExtTag(extensions, "stop");
                 const dangerNode = getExtTag(extensions, "danger");
+                const capNode = getExtTag(extensions, "cap");
                 const tulipNode = getExtTag(extensions, "tulip");
                 const noteNode = getExtTag(extensions, "notes");
 
                 const reset = resetNode?.textContent;
                 const speed = speedNode?.textContent;
                 const danger = dangerNode?.textContent;
+                const stop = stopNode?.textContent;
+                const cap = capNode?.textContent;
                 const tulipImage = tulipNode?.textContent;
                 const noteImage = noteNode?.textContent;
 
@@ -212,65 +462,207 @@ document.addEventListener('DOMContentLoaded', () => {
                 const desc = wpt.getElementsByTagName("desc")[0]?.textContent;
                 const cmt = wpt.getElementsByTagName("cmt")[0]?.textContent;
 
-                const headingVal = Math.round(angleOut);
+                const combinedText = [name, desc, cmt].filter(t => t).join(" ");
 
-                let rn2Wpt = {
-                    "waypointid": idx,
-                    "lat": pt.lat,
-                    "lon": pt.lon,
-                    "ele": pt.ele,
-                    "show": pt.isWaypoint, // Restore selective showing
-                    "showCoordinates": false,
-                    "showHeading": true,
-                    "showStickMarkOnTulip": true,
-                    "tulip": {
-                        "track": { "roadOut": {}, "roadIn": {}, "z": 0 },
-                        "roads": [
-                            { "start": roadInStart, "end": { "x": 100, "y": 60 }, "handles": [], "typeId": 10, "z": 5 },
-                            { "start": { "x": 100, "y": 60 }, "end": roadOutEnd, "handles": [], "typeId": 10, "z": 5 }
-                        ],
-                        "texts": [],
-                        "icons": [],
-                        "lines": []
-                    },
-                    "notes": {
-                        "texts": [],
-                        "icons": [],
-                        "lines": []
-                    },
-                    "overridenSmartTags": { 
-                        "dataType": "Map", 
-                        "value": [
-                            ["heading", { "show": true, "position": "tulip" }]
-                        ] 
+                // Track speed limits sequentially
+                if (speed) {
+                    currentSpeedLimit = speed.trim();
+                }
+
+                // Prepare elements lists
+                let tulipElements = [];
+                let noteElements = [];
+
+                // 1. Add Default Track element in Tulip
+                tulipElements.push({
+                    "type": "Track",
+                    "roadIn": { "handles": [], "z": 0 },
+                    "roadOut": { "handles": [], "z": 0 },
+                    "z": 0,
+                    "eId": generateUUID(),
+                    "rerender": false
+                });
+
+                // 2. Add System elements in Tulip
+                if (stop) {
+                    const stopTime = parseInt(stop) || 3;
+                    tulipElements.push({
+                        "name": "Stop",
+                        "id": "0f906096-c042-414a-89df-3be57460304c",
+                        "src": "/icons/0f906096-c042-414a-89df-3be57460304c.svg",
+                        "gpx_tags": `<stop>${stopTime}</stop>`,
+                        "disabled": false,
+                        "options": { "time": stopTime },
+                        "system": true,
+                        "angle": 0,
+                        "w": 50,
+                        "x": 53.18,
+                        "y": 87.88,
+                        "z": 7,
+                        "type": "Icon",
+                        "eId": generateUUID()
+                    });
+                }
+                if (fuelNode) {
+                    tulipElements.push({
+                        "name": "Zone de carburant",
+                        "id": "e5167bd4-314b-47d3-ba23-708182be76a9",
+                        "src": "/icons/e5167bd4-314b-47d3-ba23-708182be76a9.svg",
+                        "gpx_tags": "<fuel/>",
+                        "disabled": false,
+                        "system": true,
+                        "angle": 0,
+                        "w": 50,
+                        "x": 41,
+                        "y": 74,
+                        "z": 4,
+                        "type": "Icon",
+                        "eId": generateUUID()
+                    });
+                }
+
+                // 3. Add Cap yellow text box in Tulip (if cross_country)
+                let hasCap = false;
+                let capType = 'cap'; // Default
+                if (combinedText.toLowerCase().includes("cap moyen") || combinedText.toLowerCase().includes("cap_avg")) {
+                    capType = 'cap_avg';
+                    hasCap = true;
+                } else if (combinedText.toLowerCase().includes("cap calculé") || combinedText.toLowerCase().includes("cap_calc")) {
+                    capType = 'cap_calc';
+                    hasCap = true;
+                } else if (cap !== undefined && cap !== null && cap !== "") {
+                    hasCap = true;
+                }
+
+                if (hasCap) {
+                    tulipElements.push(createCapElement(capType));
+                }
+
+                // 4. Lexical parsing for Tulip keywords (Dunes, Tree, etc.)
+                const matchedTulipKw = checkKeywords(combinedText, KEYWORD_TULIP_MAPPING);
+                if (matchedTulipKw) {
+                    // typical positions based on keywords
+                    let posX = 99.5;
+                    let posY = 84;
+                    if (matchedTulipKw.name === "Tree") { posX = 151; posY = 102; }
+                    else if (matchedTulipKw.name === "Narrow Passage") { posX = 97; posY = 89; }
+                    
+                    tulipElements.push({
+                        "name": matchedTulipKw.name,
+                        "id": matchedTulipKw.id,
+                        "src": `/icons/${matchedTulipKw.id}.svg`,
+                        "disabled": false,
+                        "system": true,
+                        "angle": 0,
+                        "w": matchedTulipKw.w,
+                        "x": posX,
+                        "y": posY,
+                        "type": "Icon",
+                        "eId": generateUUID()
+                    });
+                }
+
+                // 5. Gather Notes icons to arrange horizontally
+                let notesIconsToDraw = [];
+
+                // Danger icon
+                if (danger) {
+                    const dangerConfig = DANGER_MAPPING[danger.trim()] || DANGER_MAPPING['1'];
+                    notesIconsToDraw.push({
+                        name: dangerConfig.name,
+                        id: dangerConfig.id,
+                        gpx_tags: `<danger>${danger}</danger>`
+                    });
+                }
+
+                // Speed Limit icon (DZ or FZ)
+                if (dzNode && currentSpeedLimit) {
+                    const speedConfig = SPEED_LIMIT_MAPPING[currentSpeedLimit];
+                    if (speedConfig) {
+                        notesIconsToDraw.push({
+                            name: speedConfig.dz.name,
+                            id: speedConfig.dz.id,
+                            gpx_tags: `<speed>${currentSpeedLimit}</speed>`
+                        });
                     }
-                };
+                } else if (fzNode && currentSpeedLimit) {
+                    const speedConfig = SPEED_LIMIT_MAPPING[currentSpeedLimit];
+                    if (speedConfig) {
+                        notesIconsToDraw.push({
+                            name: speedConfig.fz.name,
+                            id: speedConfig.fz.id,
+                            gpx_tags: `<fz/>`
+                        });
+                    }
+                    // Reset speed zone limit tracking after FZ
+                    currentSpeedLimit = null;
+                }
 
-                // Visual Recovery: Inject Base64 images as custom icons
-                let hasTulipImage = false;
+                // Lexical parsing for Notes keywords (Piste, Route, Left, Right, etc.)
+                const matchedNotesKw = checkKeywords(combinedText, KEYWORD_NOTES_MAPPING);
+                if (matchedNotesKw) {
+                    notesIconsToDraw.push({
+                        name: matchedNotesKw.name,
+                        id: matchedNotesKw.id
+                    });
+                }
+
+                // Apply Horizontal Auto-Layout on Note Icons
+                const iconCount = notesIconsToDraw.length;
+                notesIconsToDraw.forEach((icon, i) => {
+                    let w = 70;
+                    let x = 99.5;
+                    let y = 54.5;
+
+                    if (iconCount === 2) {
+                        x = [62.0, 137.0][i];
+                    } else if (iconCount === 3) {
+                        w = 61.33;
+                        x = [33.16, 99.5, 165.83][i];
+                    } else if (iconCount > 3) {
+                        w = 180 / iconCount;
+                        x = (10 + w/2) + i * w;
+                    }
+
+                    noteElements.push({
+                        "name": icon.name,
+                        "id": icon.id,
+                        "src": `/icons/${icon.id}.svg`,
+                        "disabled": false,
+                        "system": true,
+                        "eId": generateUUID(),
+                        "type": "Icon",
+                        "angle": 0,
+                        "w": w,
+                        "x": x,
+                        "y": y,
+                        "rerender": false,
+                        ...(icon.gpx_tags ? { "gpx_tags": icon.gpx_tags } : {})
+                    });
+                });
+
+                // 6. Base64 Drawing Fallbacks (Visual Recovery)
                 if (tulipImage && tulipImage.includes("data:image")) {
-                    hasTulipImage = true;
-                    rn2Wpt.tulip.icons.push({
+                    tulipElements.push({
                         "name": "Original Drawing",
                         "id": "img_" + generateUUID(),
                         "src": tulipImage.trim(),
-                        "x": 100, "y": 68, "w": 200, "h": 120, "z": 1
+                        "x": 100, "y": 68, "w": 200, "h": 120, "z": 1,
+                        "type": "Icon"
                     });
                 }
-
-                let hasNoteImage = false;
                 if (noteImage && noteImage.includes("data:image")) {
-                    hasNoteImage = true;
-                    rn2Wpt.notes.icons.push({
+                    noteElements.push({
                         "name": "Original Note",
                         "id": "img_note_" + generateUUID(),
                         "src": noteImage.trim(),
-                        "x": 100, "y": 68, "w": 200, "h": 120, "z": 1
+                        "x": 100, "y": 68, "w": 200, "h": 120, "z": 1,
+                        "type": "Icon"
                     });
                 }
 
-                // Extract text notes ONLY if no note image is present
-                if (!hasNoteImage) {
+                // 7. Extract text notes if no note image is present
+                if (!noteImage && !noteNode) {
                     let noteParts = [];
                     if (name && (isNaN(name) || name.length > 3)) noteParts.push(name);
                     if (desc) noteParts.push(desc);
@@ -278,50 +670,61 @@ document.addEventListener('DOMContentLoaded', () => {
                     
                     let combinedNote = noteParts.filter(t => t && t.length > 0).join('\n');
                     if (combinedNote) {
-                        rn2Wpt.notes.texts.push({
+                        noteElements.push({
                             "text": combinedNote,
-                            "x": 2.5, "y": 2.5, "w": 195, "h": 100, "fontSize": 14, "lineHeight": 1.2, "eId": generateUUID(), "z": 1
+                            "x": 2.5, "y": 2.5, "w": 195, "h": 100, "fontSize": 14, "lineHeight": 1.2, "eId": generateUUID(), "z": 1,
+                            "type": "Text"
                         });
                     }
                 }
 
-                // Extract note icons ONLY if no note image is present
-                if (!hasNoteImage) {
-                    if (reset !== undefined) {
-                        rn2Wpt.notes.icons.push({
-                            "name": "Reset",
-                            "id": ICON_MAPPING['reset'],
-                            "src": `/icons/${ICON_MAPPING['reset']}.svg`,
-                            "gpx_tags": `<reset>${reset}</reset>`,
-                            "x": 30, "y": 100, "w": 50, "z": 3,
-                            "system": true
-                        });
+                // Build Waypoint Object
+                let rn2Wpt = {
+                    "waypointid": idx,
+                    "lat": pt.lat,
+                    "lon": pt.lon,
+                    "ele": pt.ele,
+                    "show": true,
+                    "showCoordinates": false,
+                    "showHeading": null, // Keep Notes box clean (None)
+                    "showStickMarkOnTulip": true,
+                    "tulip": {
+                        "elements": tulipElements
+                    },
+                    "notes": {
+                        "elements": noteElements
+                    },
+                    "overridenSmartTags": { 
+                        "dataType": "Map", 
+                        "value": [] 
                     }
-                    
-                    let iconX = 80;
-                    if (speed) {
-                        rn2Wpt.notes.icons.push({
-                            "name": "Speed",
-                            "id": ICON_MAPPING['speed_40'],
-                            "src": `/icons/${ICON_MAPPING['speed_40']}.svg`,
-                            "gpx_tags": `<speed>${speed}</speed>`,
-                            "x": iconX, "y": 100, "w": 50, "z": 3,
-                            "system": true
-                        });
-                        iconX += 55;
-                    }
-                }
+                };
 
-                // Special Waypoint Icons
-                if (dssNode) rn2Wpt.waypointIcon = createWaypointIcon("Start Special", "dss", ICON_MAPPING['dss'], dssNode);
-                else if (assNode) rn2Wpt.waypointIcon = createWaypointIcon("Finish Special", "ass", ICON_MAPPING['ass'], assNode);
-                else if (fzNode) rn2Wpt.waypointIcon = createWaypointIcon("Finish Speed Limit", "fz", ICON_MAPPING['fz'], fzNode);
-                else if (dzNode) rn2Wpt.waypointIcon = createWaypointIcon("Start Speed Limit", "dz", ICON_MAPPING['dz'], dzNode);
-                else if (wpvNode) rn2Wpt.waypointIcon = createWaypointIcon("Visible WP", "wpv", ICON_MAPPING['wpv'], wpvNode);
-                else if (getExtTag(extensions, "wps")) rn2Wpt.waypointIcon = createWaypointIcon("Secret WP", "wps", ICON_MAPPING['wps'], null);
+                // Add card controls (waypointIcon) if mapped
+                let activeWptIcon = null;
+                if (dssNode) activeWptIcon = createWaypointIcon("Start Selective", "dss", WAYPOINT_ICON_MAPPING['dss'].id, dssNode);
+                else if (assNode) activeWptIcon = createWaypointIcon("Finish Selective", "ass", WAYPOINT_ICON_MAPPING['ass'].id, assNode);
+                else if (cpNode) activeWptIcon = createWaypointIcon("Checkpoint", "cp", WAYPOINT_ICON_MAPPING['cp'].id, cpNode);
+                else if (fzNode) activeWptIcon = createWaypointIcon("Finish Speed Limit", "fz", WAYPOINT_ICON_MAPPING['fz'].id, fzNode);
+                else if (dzNode) activeWptIcon = createWaypointIcon("Start Speed Limit", "dz", WAYPOINT_ICON_MAPPING['dz'].id, dzNode);
+                else if (getExtTag(extensions, "sn") || getExtTag(extensions, "neutralization")) {
+                    const snNode = getExtTag(extensions, "sn") || getExtTag(extensions, "neutralization");
+                    activeWptIcon = createWaypointIcon("Start Neutralization", "sn", WAYPOINT_ICON_MAPPING['sn'].id, snNode);
+                } else if (getExtTag(extensions, "fn")) activeWptIcon = createWaypointIcon("Finish Neutralization", "fn", WAYPOINT_ICON_MAPPING['fn'].id, getExtTag(extensions, "fn"));
+                else if (wpvNode) activeWptIcon = createWaypointIcon("Visible WP", "wpv", WAYPOINT_ICON_MAPPING['wpv'].id, wpvNode);
+                else if (getExtTag(extensions, "wpe")) activeWptIcon = createWaypointIcon("WP Eclipse", "wpe", WAYPOINT_ICON_MAPPING['wpe'].id, getExtTag(extensions, "wpe"));
+                else if (getExtTag(extensions, "wpm")) activeWptIcon = createWaypointIcon("WP Masqué", "wpm", WAYPOINT_ICON_MAPPING['wpm'].id, getExtTag(extensions, "wpm"));
+                else if (getExtTag(extensions, "wpn")) activeWptIcon = createWaypointIcon("WP Navigation", "wpn", WAYPOINT_ICON_MAPPING['wpn'].id, getExtTag(extensions, "wpn"));
+                else if (getExtTag(extensions, "wps")) activeWptIcon = createWaypointIcon("Safety WP", "wps", WAYPOINT_ICON_MAPPING['wps'].id, getExtTag(extensions, "wps"));
+                else if (getExtTag(extensions, "wpp")) activeWptIcon = createWaypointIcon("WP Précis", "wpp", WAYPOINT_ICON_MAPPING['wpp'].id, getExtTag(extensions, "wpp"));
+
+                if (activeWptIcon) {
+                    rn2Wpt.waypointIcon = activeWptIcon;
+                }
 
                 return rn2Wpt;
             } else {
+                // Non-waypoint track points (only a track vector line element inside)
                 return {
                     "waypointid": idx,
                     "lat": pt.lat,
@@ -332,14 +735,18 @@ document.addEventListener('DOMContentLoaded', () => {
                     "showHeading": false,
                     "showStickMarkOnTulip": false,
                     "tulip": {
-                        "track": { "roadOut": {}, "roadIn": {}, "z": 0 },
-                        "roads": [
-                            { "start": roadInStart, "end": { "x": 100, "y": 60 }, "handles": [], "typeId": 10, "z": 0 },
-                            { "start": { "x": 100, "y": 60 }, "end": roadOutEnd, "handles": [], "typeId": 10, "z": 0 }
-                        ],
-                        "texts": [], "icons": [], "lines": []
+                        "elements": [
+                            {
+                                "type": "Track",
+                                "roadIn": { "handles": [], "z": 0 },
+                                "roadOut": { "handles": [], "z": 0 },
+                                "z": 0,
+                                "eId": generateUUID(),
+                                "rerender": false
+                            }
+                        ]
                     },
-                    "notes": { "texts": [], "icons": [], "lines": [] },
+                    "notes": { "elements": [] },
                     "overridenSmartTags": { "dataType": "Map", "value": [] }
                 };
             }
@@ -349,7 +756,7 @@ document.addEventListener('DOMContentLoaded', () => {
             "route": {
                 "version": 3,
                 "name": fileName.replace('.gpx', ''),
-                "description": "Converted from GPX OpenRally",
+                "description": "Converted from GPX OpenRally/TerraPirata",
                 "current_style": "cross_country",
                 "waypoints": rn2Waypoints,
                 "settings": {
@@ -375,16 +782,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const dLon = (lon2 - lon1) * Math.PI / 180;
         const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
         return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    }
-
-    function createIconElement(name, id, gpxTag, x = 99.5, y = 54.5) {
-        return { "name": name, "id": id, "src": `/icons/${id}.svg`, "gpx_tags": gpxTag, "disabled": false, "system": true, "eId": generateUUID(), "type": "Icon", "angle": 0, "w": 50, "x": x, "y": y, "rerender": false };
-    }
-
-    function createWaypointIcon(name, type, id, xmlNode) {
-        const options = {};
-        if (xmlNode) for (let attr of xmlNode.attributes) options[attr.name] = parseInt(attr.value);
-        return { "name": name, "id": id, "src": `/icons/${id}.svg`, "type": type, "options": options, "system": true, "eId": generateUUID() };
     }
 
     function prepareDownload(data, filename) {
