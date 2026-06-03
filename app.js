@@ -423,6 +423,31 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // 4. Convert each point to RN2 structure
         let rn2Waypoints = mergedPoints.map((pt, idx) => {
+            // Helper to get heading between two points
+            const getHeading = (p1, p2) => {
+                if (!p1 || !p2) return 0;
+                const dy = p2.lat - p1.lat;
+                const dx = Math.cos(p1.lat * Math.PI / 180) * (p2.lon - p1.lon);
+                return Math.atan2(dx, dy) * 180 / Math.PI;
+            };
+
+            const prevPt = mergedPoints[idx - 1] || pt;
+            const nextPt = mergedPoints[idx + 1] || pt;
+            const angleIn = (getHeading(prevPt, pt) + 180) % 360;
+            const angleOut = getHeading(pt, nextPt);
+
+            // Convert angle to RN2 coordinates
+            const getCoord = (angle, d = 30) => {
+                const rad = (angle - 90) * Math.PI / 180;
+                return {
+                    x: 100 + d * Math.cos(rad),
+                    y: 60 + d * Math.sin(rad)
+                };
+            };
+
+            const roadInStart = getCoord(angleIn);
+            const roadOutEnd = getCoord(angleOut);
+
             if (pt.isWaypoint) {
                 const wpt = pt.xmlNode;
                 const extensions = wpt.getElementsByTagName("extensions")[0];
@@ -470,23 +495,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
 
                 // Prepare elements lists
-                let tulipElements = [];
-                let noteElements = [];
+                let tulipTexts = [];
+                let tulipIcons = [];
+                let notesTexts = [];
+                let notesIcons = [];
 
-                // 1. Add Default Track element in Tulip
-                tulipElements.push({
-                    "type": "Track",
-                    "roadIn": { "handles": [], "z": 0 },
-                    "roadOut": { "handles": [], "z": 0 },
-                    "z": 0,
-                    "eId": generateUUID(),
-                    "rerender": false
-                });
-
-                // 2. Add System elements in Tulip
+                // 1. Add System elements in Tulip
                 if (stop) {
                     const stopTime = parseInt(stop) || 3;
-                    tulipElements.push({
+                    tulipIcons.push({
                         "name": "Stop",
                         "id": "0f906096-c042-414a-89df-3be57460304c",
                         "src": "/icons/0f906096-c042-414a-89df-3be57460304c.svg",
@@ -499,12 +516,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         "x": 53.18,
                         "y": 87.88,
                         "z": 7,
-                        "type": "Icon",
                         "eId": generateUUID()
                     });
                 }
                 if (fuelNode) {
-                    tulipElements.push({
+                    tulipIcons.push({
                         "name": "Zone de carburant",
                         "id": "e5167bd4-314b-47d3-ba23-708182be76a9",
                         "src": "/icons/e5167bd4-314b-47d3-ba23-708182be76a9.svg",
@@ -516,12 +532,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         "x": 41,
                         "y": 74,
                         "z": 4,
-                        "type": "Icon",
                         "eId": generateUUID()
                     });
                 }
 
-                // 3. Add Cap yellow text box in Tulip (if cross_country)
+                // 2. Add Cap yellow text box in Tulip (if cross_country)
                 let hasCap = false;
                 let capType = 'cap'; // Default
                 if (combinedText.toLowerCase().includes("cap moyen") || combinedText.toLowerCase().includes("cap_avg")) {
@@ -535,19 +550,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
 
                 if (hasCap) {
-                    tulipElements.push(createCapElement(capType));
+                    tulipTexts.push(createCapElement(capType));
                 }
 
-                // 4. Lexical parsing for Tulip keywords (Dunes, Tree, etc.)
+                // 3. Lexical parsing for Tulip keywords (Dunes, Tree, etc.)
                 const matchedTulipKw = checkKeywords(combinedText, KEYWORD_TULIP_MAPPING);
                 if (matchedTulipKw) {
-                    // typical positions based on keywords
                     let posX = 99.5;
                     let posY = 84;
                     if (matchedTulipKw.name === "Tree") { posX = 151; posY = 102; }
                     else if (matchedTulipKw.name === "Narrow Passage") { posX = 97; posY = 89; }
                     
-                    tulipElements.push({
+                    tulipIcons.push({
                         "name": matchedTulipKw.name,
                         "id": matchedTulipKw.id,
                         "src": `/icons/${matchedTulipKw.id}.svg`,
@@ -557,12 +571,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         "w": matchedTulipKw.w,
                         "x": posX,
                         "y": posY,
-                        "type": "Icon",
                         "eId": generateUUID()
                     });
                 }
 
-                // 5. Gather Notes icons to arrange horizontally
+                // 4. Gather Notes icons to arrange horizontally
                 let notesIconsToDraw = [];
 
                 // Danger icon
@@ -594,11 +607,10 @@ document.addEventListener('DOMContentLoaded', () => {
                             gpx_tags: `<fz/>`
                         });
                     }
-                    // Reset speed zone limit tracking after FZ
                     currentSpeedLimit = null;
                 }
 
-                // Lexical parsing for Notes keywords (Piste, Route, Left, Right, etc.)
+                // Lexical parsing for Notes keywords
                 const matchedNotesKw = checkKeywords(combinedText, KEYWORD_NOTES_MAPPING);
                 if (matchedNotesKw) {
                     notesIconsToDraw.push({
@@ -624,14 +636,13 @@ document.addEventListener('DOMContentLoaded', () => {
                         x = (10 + w/2) + i * w;
                     }
 
-                    noteElements.push({
+                    notesIcons.push({
                         "name": icon.name,
                         "id": icon.id,
                         "src": `/icons/${icon.id}.svg`,
                         "disabled": false,
                         "system": true,
                         "eId": generateUUID(),
-                        "type": "Icon",
                         "angle": 0,
                         "w": w,
                         "x": x,
@@ -641,27 +652,25 @@ document.addEventListener('DOMContentLoaded', () => {
                     });
                 });
 
-                // 6. Base64 Drawing Fallbacks (Visual Recovery)
+                // 5. Base64 Drawing Fallbacks (Visual Recovery)
                 if (tulipImage && tulipImage.includes("data:image")) {
-                    tulipElements.push({
+                    tulipIcons.push({
                         "name": "Original Drawing",
                         "id": "img_" + generateUUID(),
                         "src": tulipImage.trim(),
-                        "x": 100, "y": 68, "w": 200, "h": 120, "z": 1,
-                        "type": "Icon"
+                        "x": 100, "y": 68, "w": 200, "h": 120, "z": 1
                     });
                 }
                 if (noteImage && noteImage.includes("data:image")) {
-                    noteElements.push({
+                    notesIcons.push({
                         "name": "Original Note",
                         "id": "img_note_" + generateUUID(),
                         "src": noteImage.trim(),
-                        "x": 100, "y": 68, "w": 200, "h": 120, "z": 1,
-                        "type": "Icon"
+                        "x": 100, "y": 68, "w": 200, "h": 120, "z": 1
                     });
                 }
 
-                // 7. Extract text notes if no note image is present
+                // 6. Extract text notes if no note image is present
                 if (!noteImage && !noteNode) {
                     let noteParts = [];
                     if (name && (isNaN(name) || name.length > 3)) noteParts.push(name);
@@ -670,15 +679,31 @@ document.addEventListener('DOMContentLoaded', () => {
                     
                     let combinedNote = noteParts.filter(t => t && t.length > 0).join('\n');
                     if (combinedNote) {
-                        noteElements.push({
+                        notesTexts.push({
                             "text": combinedNote,
-                            "x": 2.5, "y": 2.5, "w": 195, "h": 100, "fontSize": 14, "lineHeight": 1.2, "eId": generateUUID(), "z": 1,
-                            "type": "Text"
+                            "x": 2.5, "y": 2.5, "w": 195, "h": 100, "fontSize": 14, "lineHeight": 1.2, "eId": generateUUID(), "z": 1
                         });
                     }
                 }
 
-                // Build Waypoint Object
+                // Compile into elements for double-compatibility
+                let tulipElements = [];
+                tulipElements.push({
+                    "type": "Track",
+                    "roadIn": { "handles": [], "z": 0 },
+                    "roadOut": { "handles": [], "z": 0 },
+                    "z": 0,
+                    "eId": generateUUID(),
+                    "rerender": false
+                });
+                tulipTexts.forEach(el => tulipElements.push({ ...el, type: "Text" }));
+                tulipIcons.forEach(el => tulipElements.push({ ...el, type: "Icon" }));
+
+                let notesElements = [];
+                notesTexts.forEach(el => notesElements.push({ ...el, type: "Text" }));
+                notesIcons.forEach(el => notesElements.push({ ...el, type: "Icon" }));
+
+                // Build Waypoint Object with separate arrays for Importer, and elements for reference
                 let rn2Wpt = {
                     "waypointid": idx,
                     "lat": pt.lat,
@@ -686,13 +711,24 @@ document.addEventListener('DOMContentLoaded', () => {
                     "ele": pt.ele,
                     "show": true,
                     "showCoordinates": false,
-                    "showHeading": null, // Keep Notes box clean (None)
+                    "showHeading": null,
                     "showStickMarkOnTulip": true,
                     "tulip": {
+                        "track": { "roadOut": {}, "roadIn": {}, "z": 0 },
+                        "roads": [
+                            { "start": roadInStart, "end": { "x": 100, "y": 60 }, "handles": [], "typeId": 10, "z": 5 },
+                            { "start": { "x": 100, "y": 60 }, "end": roadOutEnd, "handles": [], "typeId": 10, "z": 5 }
+                        ],
+                        "texts": tulipTexts,
+                        "icons": tulipIcons,
+                        "lines": [],
                         "elements": tulipElements
                     },
                     "notes": {
-                        "elements": noteElements
+                        "texts": notesTexts,
+                        "icons": notesIcons,
+                        "lines": [],
+                        "elements": notesElements
                     },
                     "overridenSmartTags": { 
                         "dataType": "Map", 
@@ -724,7 +760,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 return rn2Wpt;
             } else {
-                // Non-waypoint track points (only a track vector line element inside)
+                // Non-waypoint track points
                 return {
                     "waypointid": idx,
                     "lat": pt.lat,
@@ -735,6 +771,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     "showHeading": false,
                     "showStickMarkOnTulip": false,
                     "tulip": {
+                        "track": { "roadOut": {}, "roadIn": {}, "z": 0 },
+                        "roads": [
+                            { "start": roadInStart, "end": { "x": 100, "y": 60 }, "handles": [], "typeId": 10, "z": 0 },
+                            { "start": { "x": 100, "y": 60 }, "end": roadOutEnd, "handles": [], "typeId": 10, "z": 0 }
+                        ],
+                        "texts": [], "icons": [], "lines": [],
                         "elements": [
                             {
                                 "type": "Track",
@@ -746,7 +788,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             }
                         ]
                     },
-                    "notes": { "elements": [] },
+                    "notes": { "texts": [], "icons": [], "lines": [], "elements": [] },
                     "overridenSmartTags": { "dataType": "Map", "value": [] }
                 };
             }
