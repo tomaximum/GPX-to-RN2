@@ -549,7 +549,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     hasCap = true;
                 }
 
-                if (hasCap) {
+                const hasTulipImage = !!(tulipImage && tulipImage.includes("data:image"));
+                if (hasCap && !hasTulipImage) {
                     tulipTexts.push(createCapElement(capType));
                 }
 
@@ -715,7 +716,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     "showStickMarkOnTulip": true,
                     "tulip": {
                         "track": { "roadOut": {}, "roadIn": {}, "z": 0 },
-                        "roads": [
+                        "roads": hasTulipImage ? [] : [
                             { "start": roadInStart, "end": { "x": 100, "y": 60 }, "handles": [], "typeId": 10, "z": 5 },
                             { "start": { "x": 100, "y": 60 }, "end": roadOutEnd, "handles": [], "typeId": 10, "z": 5 }
                         ],
