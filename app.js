@@ -534,6 +534,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 const cmt = wpt.getElementsByTagName("cmt")[0]?.textContent;
 
                 const combinedText = [name, desc, cmt].filter(t => t).join(" ");
+                const hasTulipImage = !!(tulipImage && tulipImage.includes("data:image"));
+                const hasNoteImage = !!(noteImage && noteImage.includes("data:image"));
 
                 // Track speed limits sequentially
                 if (speed) {
@@ -547,7 +549,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 let notesIcons = [];
 
                 // 1. Add System elements in Tulip
-                if (stop) {
+                if (stop && !hasTulipImage) {
                     const stopTime = parseInt(stop) || 3;
                     tulipIcons.push({
                         "name": "Stop",
@@ -565,7 +567,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         "eId": generateUUID()
                     });
                 }
-                if (fuelNode) {
+                if (fuelNode && !hasTulipImage) {
                     tulipIcons.push({
                         "name": "Zone de carburant",
                         "id": "e5167bd4-314b-47d3-ba23-708182be76a9",
@@ -606,7 +608,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     hasCap = true;
                 }
 
-                const hasTulipImage = !!(tulipImage && tulipImage.includes("data:image"));
                 // If it is in the coordinate lookup list, we force drawing the vector CAP box even if it has a tulip image.
                 // Otherwise, we only draw it if there is no tulip image.
                 if (hasCap && (!hasTulipImage || matchedCap)) {
@@ -621,7 +622,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 // 3. Lexical parsing for Tulip keywords (Dunes, Tree, etc.)
                 const matchedTulipKw = checkKeywords(combinedText, KEYWORD_TULIP_MAPPING);
-                if (matchedTulipKw) {
+                if (matchedTulipKw && !hasTulipImage) {
                     let posX = 99.5;
                     let posY = 84;
                     if (matchedTulipKw.name === "Tree") { posX = 151; posY = 102; }
@@ -645,7 +646,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 let notesIconsToDraw = [];
 
                 // Danger icon
-                if (danger) {
+                if (danger && !hasNoteImage) {
                     const dangerConfig = DANGER_MAPPING[danger.trim()] || DANGER_MAPPING['1'];
                     notesIconsToDraw.push({
                         name: dangerConfig.name,
@@ -655,7 +656,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
 
                 // Speed Limit icon (DZ or FZ)
-                if (dzNode && currentSpeedLimit) {
+                if (dzNode && currentSpeedLimit && !hasNoteImage) {
                     const speedConfig = SPEED_LIMIT_MAPPING[currentSpeedLimit];
                     if (speedConfig) {
                         notesIconsToDraw.push({
@@ -665,20 +666,31 @@ document.addEventListener('DOMContentLoaded', () => {
                         });
                     }
                 } else if (fzNode && currentSpeedLimit) {
+                    if (!hasNoteImage) {
+                        const speedConfig = SPEED_LIMIT_MAPPING[currentSpeedLimit];
+                        if (speedConfig) {
+                            notesIconsToDraw.push({
+                                name: speedConfig.fz.name,
+                                id: speedConfig.fz.id,
+                                gpx_tags: `<fz/>`
+                            });
+                        }
+                    }
+                    currentSpeedLimit = null;
+                } else if (speedNode && currentSpeedLimit && !hasNoteImage) {
                     const speedConfig = SPEED_LIMIT_MAPPING[currentSpeedLimit];
                     if (speedConfig) {
                         notesIconsToDraw.push({
-                            name: speedConfig.fz.name,
-                            id: speedConfig.fz.id,
-                            gpx_tags: `<fz/>`
+                            name: speedConfig.dz.name,
+                            id: speedConfig.dz.id,
+                            gpx_tags: `<speed>${currentSpeedLimit}</speed>`
                         });
                     }
-                    currentSpeedLimit = null;
                 }
 
                 // Lexical parsing for Notes keywords
                 const matchedNotesKw = checkKeywords(combinedText, KEYWORD_NOTES_MAPPING);
-                if (matchedNotesKw) {
+                if (matchedNotesKw && !hasNoteImage) {
                     notesIconsToDraw.push({
                         name: matchedNotesKw.name,
                         id: matchedNotesKw.id
