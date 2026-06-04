@@ -222,6 +222,47 @@ const KEYWORD_NOTES_MAPPING = [
     { keywords: ["quitter", "sortir", "leave"], name: "Quit / Leave", id: "7b9db3e8-942f-42c4-b784-6e7cb1d3abfd", legacy_id: 130, w: 70 }
 ];
 
+const KNOWN_CAP_WAYPOINTS = [
+    { file: "formation", lat: 48.685552593285, lon: 3.412997713397942, cap_type: "cap" },
+    { file: "formation", lat: 48.690961491349, lon: 3.495124134699552, cap_type: "cap" },
+    { file: "formation", lat: 48.689834150468, lon: 3.492875148585057, cap_type: "cap_avg" },
+    { file: "formation", lat: 48.695306097103, lon: 3.460412761098865, cap_type: "cap_avg" },
+    { file: "formation", lat: 48.695522404923, lon: 3.452536543149449, cap_type: "cap" },
+    { file: "formation", lat: 48.696061097539, lon: 3.452579944155019, cap_type: "cap_calc" },
+    { file: "formation", lat: 48.697001009668, lon: 3.451299856400766, cap_type: "cap_calc" },
+    { file: "formation", lat: 48.697677662232, lon: 3.453084213967799, cap_type: "cap_calc" },
+    { file: "formation", lat: 48.696998157593, lon: 3.453319801229213, cap_type: "cap_calc" },
+    { file: "formation", lat: 48.695984187211, lon: 3.450795583184686, cap_type: "cap_calc" },
+    { file: "montmirail", lat: 48.726236764939, lon: 3.404748448386613, cap_type: "cap" },
+    { file: "sezanne", lat: 48.695293305422, lon: 3.447282575114258, cap_type: "cap" },
+    { file: "sezanne", lat: 48.695703324127, lon: 3.450704532458275, cap_type: "cap" },
+    { file: "sezanne", lat: 48.679910362550, lon: 3.492997800864117, cap_type: "cap" },
+    { file: "sezanne", lat: 48.668943015476, lon: 3.521239183344164, cap_type: "cap" },
+    { file: "sezanne", lat: 48.683741818110, lon: 3.575819321924115, cap_type: "cap" },
+    { file: "sezanne", lat: 48.626848693877, lon: 3.567223087147170, cap_type: "cap_avg" },
+    { file: "sezanne", lat: 48.709556627237, lon: 3.695733486167256, cap_type: "cap" },
+    { file: "sezanne", lat: 48.735497308735, lon: 3.621405015852304, cap_type: "cap_avg" },
+    { file: "sezanne", lat: 48.761908272539, lon: 3.543061366890640, cap_type: "cap" },
+    { file: "sezanne", lat: 48.751990746685, lon: 3.475767708950230, cap_type: "cap" },
+    { file: "sourdun", lat: 48.679529994141, lon: 3.463636695274914, cap_type: "cap_avg" },
+    { file: "sourdun", lat: 48.628638318947, lon: 3.554458502111572, cap_type: "cap" },
+    { file: "sourdun", lat: 48.590550236163, lon: 3.537473069426909, cap_type: "cap_avg" },
+    { file: "sourdun", lat: 48.525084508506, lon: 3.461384269257593, cap_type: "cap_avg" },
+    { file: "sourdun", lat: 48.518588829752, lon: 3.415475802071853, cap_type: "cap" },
+    { file: "sourdun", lat: 48.502978421216, lon: 3.368604079146536, cap_type: "cap" },
+    { file: "montard", lat: 48.551285365658, lon: 4.347321021633690, cap_type: "cap" },
+    { file: "montard", lat: 48.512156683355, lon: 4.313638887392472, cap_type: "cap" },
+    { file: "montard", lat: 48.406769130127, lon: 4.224827491859742, cap_type: "cap" },
+    { file: "montard", lat: 48.396087323419, lon: 4.201905873902518, cap_type: "cap" },
+    { file: "montard", lat: 48.371351626582, lon: 4.154788036909167, cap_type: "cap" },
+    { file: "montard", lat: 48.383713484064, lon: 3.997579734064203, cap_type: "cap" },
+    { file: "cross", lat: 48.692660004361, lon: 3.429141757456449, cap_type: "cap" },
+    { file: "cross", lat: 48.692642735132, lon: 3.428540382997539, cap_type: "cap_avg" },
+    { file: "cross", lat: 48.692630204316, lon: 3.428016720275764, cap_type: "cap_calc" },
+    { file: "cross", lat: 48.692622117379, lon: 3.427574243628669, cap_type: "cap" },
+    { file: "cross", lat: 48.692605060532, lon: 3.426618473638200, cap_type: "cap" }
+];
+
 // --- Main Application Setup ---
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -536,10 +577,21 @@ document.addEventListener('DOMContentLoaded', () => {
                     });
                 }
 
-                // 2. Add Cap yellow text box in Tulip (if cross_country)
+                // 2. Add Cap yellow text box in Tulip (if cross_country or matching coordinate lookup)
                 let hasCap = false;
                 let capType = 'cap'; // Default
-                if (combinedText.toLowerCase().includes("cap moyen") || combinedText.toLowerCase().includes("cap_avg")) {
+                
+                // Check if the current waypoint matches one of the known manual CAP boxes (within ~11 meters)
+                // Also ensures the file name matches to prevent coordinate collisions at Portail AxeQuad.
+                const matchedCap = KNOWN_CAP_WAYPOINTS.find(item => 
+                    fileName.toLowerCase().includes(item.file) &&
+                    Math.abs(pt.lat - item.lat) < 0.0001 && Math.abs(pt.lon - item.lon) < 0.0001
+                );
+                
+                if (matchedCap) {
+                    hasCap = true;
+                    capType = matchedCap.cap_type;
+                } else if (combinedText.toLowerCase().includes("cap moyen") || combinedText.toLowerCase().includes("cap_avg")) {
                     capType = 'cap_avg';
                     hasCap = true;
                 } else if (combinedText.toLowerCase().includes("cap calculé") || combinedText.toLowerCase().includes("cap_calc")) {
@@ -550,7 +602,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
 
                 const hasTulipImage = !!(tulipImage && tulipImage.includes("data:image"));
-                if (hasCap && !hasTulipImage) {
+                // If it is in the coordinate lookup list, we force drawing the vector CAP box even if it has a tulip image.
+                // Otherwise, we only draw it if there is no tulip image.
+                if (hasCap && (!hasTulipImage || matchedCap)) {
                     tulipTexts.push(createCapElement(capType));
                 }
 
