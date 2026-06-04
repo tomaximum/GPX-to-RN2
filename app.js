@@ -645,6 +645,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 // 4. Gather Notes icons to arrange horizontally
                 let notesIconsToDraw = [];
 
+                // Reset Trip / Distance icon (system icon, always drawn to preserve navigation functionality)
+                if (resetNode) {
+                    notesIconsToDraw.push({
+                        name: "Reset to Distance to Zero",
+                        id: "308c7365-bc3f-451b-9e98-531e9015024f",
+                        gpx_tags: `<openrally:reset>${reset || '0'}</openrally:reset>`
+                    });
+                }
+
                 // Danger icon
                 if (danger && !hasNoteImage) {
                     const dangerConfig = DANGER_MAPPING[danger.trim()] || DANGER_MAPPING['1'];
