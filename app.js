@@ -223,44 +223,44 @@ const KEYWORD_NOTES_MAPPING = [
 ];
 
 const KNOWN_CAP_WAYPOINTS = [
-    { file: "formation", lat: 48.685552593285, lon: 3.412997713397942, cap_type: "cap" },
-    { file: "formation", lat: 48.690961491349, lon: 3.495124134699552, cap_type: "cap" },
-    { file: "formation", lat: 48.689834150468, lon: 3.492875148585057, cap_type: "cap_avg" },
-    { file: "formation", lat: 48.695306097103, lon: 3.460412761098865, cap_type: "cap_avg" },
-    { file: "formation", lat: 48.695522404923, lon: 3.452536543149449, cap_type: "cap" },
-    { file: "formation", lat: 48.696061097539, lon: 3.452579944155019, cap_type: "cap_calc" },
-    { file: "formation", lat: 48.697001009668, lon: 3.451299856400766, cap_type: "cap_calc" },
-    { file: "formation", lat: 48.697677662232, lon: 3.453084213967799, cap_type: "cap_calc" },
-    { file: "formation", lat: 48.696998157593, lon: 3.453319801229213, cap_type: "cap_calc" },
-    { file: "formation", lat: 48.695984187211, lon: 3.450795583184686, cap_type: "cap_calc" },
-    { file: "montmirail", lat: 48.726236764939, lon: 3.404748448386613, cap_type: "cap" },
-    { file: "sezanne", lat: 48.695293305422, lon: 3.447282575114258, cap_type: "cap" },
-    { file: "sezanne", lat: 48.695703324127, lon: 3.450704532458275, cap_type: "cap" },
-    { file: "sezanne", lat: 48.679910362550, lon: 3.492997800864117, cap_type: "cap" },
-    { file: "sezanne", lat: 48.668943015476, lon: 3.521239183344164, cap_type: "cap" },
-    { file: "sezanne", lat: 48.683741818110, lon: 3.575819321924115, cap_type: "cap" },
-    { file: "sezanne", lat: 48.626848693877, lon: 3.567223087147170, cap_type: "cap_avg" },
-    { file: "sezanne", lat: 48.709556627237, lon: 3.695733486167256, cap_type: "cap" },
-    { file: "sezanne", lat: 48.735497308735, lon: 3.621405015852304, cap_type: "cap_avg" },
-    { file: "sezanne", lat: 48.761908272539, lon: 3.543061366890640, cap_type: "cap" },
-    { file: "sezanne", lat: 48.751990746685, lon: 3.475767708950230, cap_type: "cap" },
-    { file: "sourdun", lat: 48.679529994141, lon: 3.463636695274914, cap_type: "cap_avg" },
-    { file: "sourdun", lat: 48.628638318947, lon: 3.554458502111572, cap_type: "cap" },
-    { file: "sourdun", lat: 48.590550236163, lon: 3.537473069426909, cap_type: "cap_avg" },
-    { file: "sourdun", lat: 48.525084508506, lon: 3.461384269257593, cap_type: "cap_avg" },
-    { file: "sourdun", lat: 48.518588829752, lon: 3.415475802071853, cap_type: "cap" },
-    { file: "sourdun", lat: 48.502978421216, lon: 3.368604079146536, cap_type: "cap" },
-    { file: "montard", lat: 48.551285365658, lon: 4.347321021633690, cap_type: "cap" },
-    { file: "montard", lat: 48.512156683355, lon: 4.313638887392472, cap_type: "cap" },
-    { file: "montard", lat: 48.406769130127, lon: 4.224827491859742, cap_type: "cap" },
-    { file: "montard", lat: 48.396087323419, lon: 4.201905873902518, cap_type: "cap" },
-    { file: "montard", lat: 48.371351626582, lon: 4.154788036909167, cap_type: "cap" },
-    { file: "montard", lat: 48.383713484064, lon: 3.997579734064203, cap_type: "cap" },
-    { file: "cross", lat: 48.692660004361, lon: 3.429141757456449, cap_type: "cap" },
-    { file: "cross", lat: 48.692642735132, lon: 3.428540382997539, cap_type: "cap_avg" },
-    { file: "cross", lat: 48.692630204316, lon: 3.428016720275764, cap_type: "cap_calc" },
-    { file: "cross", lat: 48.692622117379, lon: 3.427574243628669, cap_type: "cap" },
-    { file: "cross", lat: 48.692605060532, lon: 3.426618473638200, cap_type: "cap" }
+    { file: "formation", lat: 48.685552593285, lon: 3.412997713398, cap_type: "cap", x: 109.5, y: 79.0, scaleX: 0.65, scaleY: 0.65 },
+    { file: "formation", lat: 48.690961491349, lon: 3.495124134700, cap_type: "cap", x: 96.5, y: 85.2, scaleX: 0.65, scaleY: 0.65 },
+    { file: "formation", lat: 48.689834150468, lon: 3.492875148585, cap_type: "cap_avg", x: 102.5, y: 80.0, scaleX: 0.89, scaleY: 0.89 },
+    { file: "formation", lat: 48.695306097103, lon: 3.460412761099, cap_type: "cap_avg", x: 101.5, y: 30.2, scaleX: 0.89, scaleY: 0.89 },
+    { file: "formation", lat: 48.695522404923, lon: 3.452536543149, cap_type: "cap", x: 158.8, y: 32.8, scaleX: 0.65, scaleY: 0.65 },
+    { file: "formation", lat: 48.696061097539, lon: 3.452579944155, cap_type: "cap_calc", x: 93.5, y: 80.9, scaleX: 0.89, scaleY: 0.89 },
+    { file: "formation", lat: 48.697001009668, lon: 3.451299856401, cap_type: "cap_calc", x: 108.4, y: 90.7, scaleX: 0.89, scaleY: 0.89 },
+    { file: "formation", lat: 48.697677662232, lon: 3.453084213968, cap_type: "cap_calc", x: 103.5, y: 82.7, scaleX: 0.89, scaleY: 0.89 },
+    { file: "formation", lat: 48.696998157593, lon: 3.453319801229, cap_type: "cap_calc", x: 102.5, y: 88.9, scaleX: 0.89, scaleY: 0.89 },
+    { file: "formation", lat: 48.695984187211, lon: 3.450795583185, cap_type: "cap_calc", x: 102.5, y: 82.7, scaleX: 0.89, scaleY: 0.89 },
+    { file: "montmirail", lat: 48.726236764939, lon: 3.404748448387, cap_type: "cap", x: 65.3, y: 26.5, scaleX: 0.66, scaleY: 0.66 },
+    { file: "sezanne", lat: 48.695293305422, lon: 3.447282575114, cap_type: "cap", x: 171.9, y: 109.2, scaleX: 0.66, scaleY: 0.66 },
+    { file: "sezanne", lat: 48.695703324127, lon: 3.450704532458, cap_type: "cap", x: 149.7, y: 36.3, scaleX: 0.66, scaleY: 0.66 },
+    { file: "sezanne", lat: 48.679910362550, lon: 3.492997800864, cap_type: "cap", x: 60.3, y: 33.6, scaleX: 0.66, scaleY: 0.66 },
+    { file: "sezanne", lat: 48.668943015476, lon: 3.521239183344, cap_type: "cap", x: 167.7, y: 27.4, scaleX: 0.66, scaleY: 0.66 },
+    { file: "sezanne", lat: 48.683741818110, lon: 3.575819321924, cap_type: "cap", x: 164.7, y: 73.6, scaleX: 0.66, scaleY: 0.66 },
+    { file: "sezanne", lat: 48.626848693877, lon: 3.567223087147, cap_type: "cap_avg", x: 53.3, y: 30.1, scaleX: 0.9, scaleY: 0.9 },
+    { file: "sezanne", lat: 48.709556627237, lon: 3.695733486167, cap_type: "cap", x: 43.0, y: 31.0, scaleX: 0.66, scaleY: 0.66 },
+    { file: "sezanne", lat: 48.735497308735, lon: 3.621405015852, cap_type: "cap_avg", x: 123.5, y: 35.1, scaleX: 0.88, scaleY: 0.88 },
+    { file: "sezanne", lat: 48.761908272539, lon: 3.543061366891, cap_type: "cap", x: 103.4, y: 28.3, scaleX: 0.66, scaleY: 0.66 },
+    { file: "sezanne", lat: 48.751990746685, lon: 3.475767708950, cap_type: "cap", x: 161.6, y: 38.1, scaleX: 0.66, scaleY: 0.66 },
+    { file: "sourdun", lat: 48.679529994141, lon: 3.463636695275, cap_type: "cap_avg", x: 149.7, y: 49.8, scaleX: 0.89, scaleY: 0.89 },
+    { file: "sourdun", lat: 48.628638318947, lon: 3.554458502112, cap_type: "cap", x: 160.7, y: 59.6, scaleX: 0.65, scaleY: 0.65 },
+    { file: "sourdun", lat: 48.590550236163, lon: 3.537473069427, cap_type: "cap_avg", x: 155.8, y: 32.0, scaleX: 0.89, scaleY: 0.89 },
+    { file: "sourdun", lat: 48.525084508506, lon: 3.461384269258, cap_type: "cap_avg", x: 100.9, y: 83.7, scaleX: 1.0, scaleY: 1.0 },
+    { file: "sourdun", lat: 48.518588829752, lon: 3.415475802072, cap_type: "cap", x: 97.5, y: 80.8, scaleX: 0.65, scaleY: 0.65 },
+    { file: "sourdun", lat: 48.502978421216, lon: 3.368604079147, cap_type: "cap", x: 101.4, y: 83.4, scaleX: 0.65, scaleY: 0.65 },
+    { file: "montard", lat: 48.551285365658, lon: 4.347321021634, cap_type: "cap", x: 162.6, y: 31.0, scaleX: 0.66, scaleY: 0.66 },
+    { file: "montard", lat: 48.512156683355, lon: 4.313638887392, cap_type: "cap", x: 167.7, y: 30.1, scaleX: 0.66, scaleY: 0.66 },
+    { file: "montard", lat: 48.406769130127, lon: 4.224827491860, cap_type: "cap", x: 98.3, y: 71.0, scaleX: 0.66, scaleY: 0.66 },
+    { file: "montard", lat: 48.396087323419, lon: 4.201905873903, cap_type: "cap", x: 99.3, y: 72.7, scaleX: 0.66, scaleY: 0.66 },
+    { file: "montard", lat: 48.371351626582, lon: 4.154788036909, cap_type: "cap", x: 98.3, y: 81.6, scaleX: 0.66, scaleY: 0.66 },
+    { file: "montard", lat: 48.383713484064, lon: 3.997579734064, cap_type: "cap", x: 38.0, y: 42.5, scaleX: 0.66, scaleY: 0.66 },
+    { file: "cross", lat: 48.692660004361, lon: 3.429141757456, cap_type: "cap", x: 165.5, y: 48.6, scaleX: 0.65, scaleY: 0.65 },
+    { file: "cross", lat: 48.692642735132, lon: 3.428540382998, cap_type: "cap_avg", x: 152.4, y: 61.3, scaleX: 0.89, scaleY: 0.89 },
+    { file: "cross", lat: 48.692630204316, lon: 3.428016720276, cap_type: "cap_calc", x: 166.5, y: 73.8, scaleX: 0.89, scaleY: 0.89 },
+    { file: "cross", lat: 48.692622117379, lon: 3.427574243629, cap_type: "cap", x: 147.0, y: 76.0, scaleX: 1.0, scaleY: 1.0 },
+    { file: "cross", lat: 48.692605060532, lon: 3.426618473638, cap_type: "cap", x: 165.0, y: 58.0, scaleX: 1.0, scaleY: 1.0 }
 ];
 
 // --- Main Application Setup ---
@@ -401,12 +401,15 @@ document.addEventListener('DOMContentLoaded', () => {
         let currentSpeedLimit = null;
 
         // Helper to construct yellow Cap boxes
-        function createCapElement(capType) {
+        function createCapElement(capType, x, y, scaleX, scaleY) {
             const capConfig = {
                 'cap_avg': { name: "CAP moyen", id: "e21cc1a3-1c27-4a80-bbb9-9c85a71b4397", legacy_id: 234, src: "${cap}\nA", x: 152, y: 60, recalculate: true },
                 'cap_calc': { name: "CAP calculé (HP uniquement)", id: "273ed50c-1385-4dca-afa3-5378f81e54b8", legacy_id: 235, src: "${cap}\nC", x: 166, y: 74, recalculate: true },
                 'cap': { name: "Sortir du CAP", id: "015dce7c-2922-41c3-ab17-40ff9ff6340e", legacy_id: 208, src: "${cap}", x: 165, y: 46 }
             }[capType] || { name: "Sortir du CAP", id: "015dce7c-2922-41c3-ab17-40ff9ff6340e", legacy_id: 208, src: "${cap}", x: 165, y: 46 };
+
+            const finalX = x !== undefined && x !== null ? x : capConfig.x;
+            const finalY = y !== undefined && y !== null ? y : capConfig.y;
 
             return {
                 "name": capConfig.name,
@@ -421,13 +424,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 "system": true,
                 "eId": generateUUID(),
                 "type": "Text",
-                "x": capConfig.x,
-                "y": capConfig.y,
+                "x": finalX,
+                "y": finalY,
                 "editable": false,
                 "textBackgroundColor": "#fdef48",
                 "fontSize": 32,
                 "cap": true,
                 "rerender": false,
+                ...(scaleX !== undefined && scaleX !== null ? { "scaleX": scaleX } : {}),
+                ...(scaleY !== undefined && scaleY !== null ? { "scaleY": scaleY } : {}),
                 ...(capConfig.recalculate ? { "recalculate": true } : {})
             };
         }
@@ -605,7 +610,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 // If it is in the coordinate lookup list, we force drawing the vector CAP box even if it has a tulip image.
                 // Otherwise, we only draw it if there is no tulip image.
                 if (hasCap && (!hasTulipImage || matchedCap)) {
-                    tulipTexts.push(createCapElement(capType));
+                    tulipTexts.push(createCapElement(
+                        capType,
+                        matchedCap ? matchedCap.x : undefined,
+                        matchedCap ? matchedCap.y : undefined,
+                        matchedCap ? matchedCap.scaleX : undefined,
+                        matchedCap ? matchedCap.scaleY : undefined
+                    ));
                 }
 
                 // 3. Lexical parsing for Tulip keywords (Dunes, Tree, etc.)
