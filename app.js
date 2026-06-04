@@ -840,6 +840,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 else if (getExtTag(extensions, "wpn")) activeWptIcon = createWaypointIcon("WP Navigation", "wpn", WAYPOINT_ICON_MAPPING['wpn'].id, getExtTag(extensions, "wpn"));
                 else if (getExtTag(extensions, "wps")) activeWptIcon = createWaypointIcon("Safety WP", "wps", WAYPOINT_ICON_MAPPING['wps'].id, getExtTag(extensions, "wps"));
                 else if (getExtTag(extensions, "wpp")) activeWptIcon = createWaypointIcon("WP Précis", "wpp", WAYPOINT_ICON_MAPPING['wpp'].id, getExtTag(extensions, "wpp"));
+                else if (getExtTag(extensions, "wpc")) activeWptIcon = createWaypointIcon("Control WP", "wpc", WAYPOINT_ICON_MAPPING['wpc'].id, getExtTag(extensions, "wpc"));
 
                 if (activeWptIcon) {
                     rn2Wpt.waypointIcon = activeWptIcon;
